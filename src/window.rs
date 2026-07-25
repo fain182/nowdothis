@@ -40,6 +40,8 @@ mod imp {
         #[template_child]
         pub navigation_view: TemplateChild<adw::NavigationView>,
         #[template_child]
+        pub focus_page: TemplateChild<adw::NavigationPage>,
+        #[template_child]
         pub plan_page: TemplateChild<adw::NavigationPage>,
         #[template_child]
         pub prompt_revealer: TemplateChild<gtk::Revealer>,
@@ -163,6 +165,21 @@ mod imp {
                 }
             ));
 
+            // Landing on the task means the next thing wanted is Done, so put
+            // the keyboard on it and let Enter carry the whole run.
+            self.focus_page.connect_showing(clone!(
+                #[weak]
+                window,
+                move |_| {
+                    let imp = window.imp();
+                    if imp.done_button.is_visible() {
+                        imp.done_button.grab_focus();
+                    }
+                }
+            ));
+
+            window.setup_actions();
+
             // Pages declared in the template are registered with the navigation
             // view, not stacked: the focus page is the root, so an empty list
             // has to push the planning page over it.
@@ -201,6 +218,39 @@ impl NowdothisWindow {
         glib::Object::builder()
             .property("application", application)
             .build()
+    }
+
+    fn setup_actions(&self) {
+        let advance = gio::ActionEntry::builder("advance")
+            .activate(|window: &Self, _, _| window.advance())
+            .build();
+        let add_task = gio::ActionEntry::builder("add-task")
+            .activate(|window: &Self, _, _| window.present_add_dialog())
+            .build();
+
+        self.add_action_entries([advance, add_task]);
+    }
+
+    /// The same keystroke moves the day forward wherever you are: it starts the
+    /// list from the planning page and marks the task done from the task page.
+    fn advance(&self) {
+        let imp = self.imp();
+
+        if imp.tasks.borrow().is_empty() {
+            return;
+        }
+
+        let on_plan = imp
+            .navigation_view
+            .visible_page()
+            .and_then(|page| page.tag())
+            .is_some_and(|tag| tag == "plan");
+
+        if on_plan {
+            imp.navigation_view.pop();
+        } else {
+            self.complete_current_task();
+        }
     }
 
     fn refresh(&self) {

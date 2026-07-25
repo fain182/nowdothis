@@ -45,6 +45,10 @@ mod imp {
             let obj = self.obj();
             obj.setup_gactions();
             obj.set_accels_for_action("app.quit", &["<control>q"]);
+            obj.set_accels_for_action("app.shortcuts", &["<control>question"]);
+            // Enter belongs to the text view, where it separates tasks.
+            obj.set_accels_for_action("win.advance", &["<control>Return", "<control>KP_Enter"]);
+            obj.set_accels_for_action("win.add-task", &["<control>n"]);
         }
     }
 
