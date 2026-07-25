@@ -318,8 +318,10 @@ impl NowdothisWindow {
         // Hidden rather than insensitive: a greyed-out suggested-action button
         // reads as broken, and there is nothing to start anyway.
         imp.start_button.set_visible(!tasks.is_empty());
-        // One way out at a time: the call to action replaces the header button.
+        // One way out at a time: with nothing left to do, Plan More is the only
+        // offer to add something, and Edit List leads where it already goes.
         imp.edit_button.set_visible(!tasks.is_empty());
+        imp.add_button.set_visible(!tasks.is_empty());
     }
 
     /// Writes the task into whichever of the two labels is offscreen and brings
