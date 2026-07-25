@@ -182,8 +182,9 @@ impl NowdothisWindow {
         imp.task_label.set_text(tasks.current().unwrap_or_default());
         imp.placeholder
             .set_visible(imp.task_view.buffer().char_count() == 0);
-        // With nothing written down there is nothing to start.
-        imp.start_button.set_sensitive(!tasks.is_empty());
+        // Hidden rather than insensitive: a greyed-out suggested-action button
+        // reads as broken, and there is nothing to start anyway.
+        imp.start_button.set_visible(!tasks.is_empty());
     }
 
     fn on_list_edited(&self, buffer: &gtk::TextBuffer) {

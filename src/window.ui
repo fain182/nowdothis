@@ -159,9 +159,7 @@
                                     <property name="margin-top">12</property>
                                     <property name="margin-start">14</property>
                                     <property name="margin-end">14</property>
-                                    <property name="label" translatable="yes">Write one task per line.
-
-The first line is what you'll do next — the rest waits its turn.</property>
+                                    <property name="label" translatable="yes">One task per line. The first one is what you'll do next.</property>
                                     <style>
                                       <class name="dim-label"/>
                                     </style>
