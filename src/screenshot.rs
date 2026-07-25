@@ -27,10 +27,19 @@ use crate::window::NowdothisWindow;
 ///   appear on demand, such as a dialog, can be captured.
 /// - `NOWDOTHIS_SNAPSHOT_DELAY` — milliseconds to wait after that action, to
 ///   catch an animation part way through.
+/// - `NOWDOTHIS_SNAPSHOT_TEXT_SCALE` — desktop text scaling factor, for
+///   checking that the layout survives large text.
 pub fn capture(window: &NowdothisWindow) {
     let Ok(path) = std::env::var("NOWDOTHIS_SNAPSHOT") else {
         return;
     };
+
+    if let Ok(scale) = std::env::var("NOWDOTHIS_SNAPSHOT_TEXT_SCALE") {
+        let scale: f64 = scale.parse().expect("the scale is a number");
+        if let Some(settings) = gtk::Settings::default() {
+            settings.set_gtk_xft_dpi((96.0 * 1024.0 * scale) as i32);
+        }
+    }
 
     if let Ok(size) = std::env::var("NOWDOTHIS_SNAPSHOT_SIZE") {
         let (width, height) = size.split_once('x').expect("size reads WIDTHxHEIGHT");
@@ -59,14 +68,32 @@ pub fn capture(window: &NowdothisWindow) {
     glib::timeout_add_local_once(std::time::Duration::from_millis(400), move || {
         if let Ok(action) = std::env::var("NOWDOTHIS_SNAPSHOT_ACTION") {
             // App actions are not reachable through a widget's action muxer.
-            match action.strip_prefix("app.") {
-                Some(name) => window
-                    .application()
-                    .expect("the window has an application")
-                    .activate_action(name, None),
-                None => {
-                    WidgetExt::activate_action(&window, &action, None)
-                        .expect("the action exists");
+            // Adding a task takes typing and confirming, neither of which an
+            // action can do on its own.
+            if action == "toast" {
+                WidgetExt::activate_action(&window, "win.add-task", None)
+                    .expect("the action exists");
+                if let Some(dialog) = window.visible_dialog() {
+                    let alert = dialog
+                        .downcast::<adw::AlertDialog>()
+                        .expect("the add dialog is an alert");
+                    alert
+                        .extra_child()
+                        .and_downcast::<gtk::Entry>()
+                        .expect("the dialog holds an entry")
+                        .set_text("post the parcel");
+                    alert.emit_by_name::<()>("response", &[&"add"]);
+                }
+            } else {
+                match action.strip_prefix("app.") {
+                    Some(name) => window
+                        .application()
+                        .expect("the window has an application")
+                        .activate_action(name, None),
+                    None => {
+                        WidgetExt::activate_action(&window, &action, None)
+                            .expect("the action exists");
+                    }
                 }
             }
         }

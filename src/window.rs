@@ -386,6 +386,11 @@ impl NowdothisWindow {
     }
 
     fn add_task(&self, task: &str) {
+        // Nothing was added, so nothing should be claimed.
+        if task.trim().is_empty() {
+            return;
+        }
+
         let imp = self.imp();
 
         imp.tasks.borrow_mut().append(task);
