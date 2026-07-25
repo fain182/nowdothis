@@ -291,12 +291,21 @@
                       </object>
                     </child>
                     <property name="content">
+                      <!-- The document surface fills the window, so nothing is
+                           left for the text to blend into, while the clamp keeps
+                           the line length readable however wide the window gets. -->
                       <object class="GtkScrolledWindow">
                         <property name="vexpand">True</property>
+                        <style>
+                          <class name="view"/>
+                        </style>
                         <property name="child">
-                          <!-- A document surface, like a text editor: the view
-                               fills the window, so there is no background left
-                               for it to blend into. -->
+                          <object class="AdwClamp">
+                            <property name="maximum-size">640</property>
+                            <!-- Without this the clamp starts insetting the text
+                                 well before the window reaches 640. -->
+                            <property name="tightening-threshold">640</property>
+                            <property name="child">
                           <object class="GtkOverlay">
                             <property name="vexpand">True</property>
                             <property name="child">
@@ -345,6 +354,8 @@
                                     </style>
                                   </object>
                                 </child>
+                          </object>
+                            </property>
                           </object>
                         </property>
                       </object>
