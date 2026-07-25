@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Project xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:foaf="http://xmlns.com/foaf/0.1/"
+         xmlns="http://usefulinc.com/ns/doap#">
+
+  <name xml:lang="en">Now Do This</name>
+  <shortdesc xml:lang="en">Do one task at a time</shortdesc>
+  <description xml:lang="en">A to-do app for a single day. Write down what you
+  are doing today, one task per line, and the app shows you one at a time until
+  the list is clear.</description>
+
+  <homepage rdf:resource="https://github.com/fain182/nowdothis" />
+  <bug-database rdf:resource="https://github.com/fain182/nowdothis/issues" />
+  <download-page rdf:resource="https://github.com/fain182/nowdothis/releases" />
+
+  <programming-language>Rust</programming-language>
+
+  <maintainer>
+    <foaf:Person>
+      <foaf:name>Pietro Campagnano</foaf:name>
+      <foaf:mbox rdf:resource="mailto:hello@pietro.camp" />
+      <foaf:account>
+        <foaf:OnlineAccount>
+          <foaf:accountServiceHomepage rdf:resource="https://github.com" />
+          <foaf:accountName>fain182</foaf:accountName>
+        </foaf:OnlineAccount>
+      </foaf:account>
+    </foaf:Person>
+  </maintainer>
+
+</Project>

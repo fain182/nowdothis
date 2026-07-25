@@ -4,68 +4,66 @@
   <metadata_license>CC0-1.0</metadata_license>
   <project_license>GPL-3.0-or-later</project_license>
 
-  <name>Nowdothis</name>
-  <summary>Keep the summary shorter, between 10 and 35 characters</summary>
+  <name>Now Do This</name>
+  <summary>Do one task at a time</summary>
   <description>
-    <p>No description</p>
+    <p>
+      Now Do This shows you a single task at a time, so you can get on with it
+      instead of looking at a list.
+    </p>
+    <p>
+      Write down what you are doing today, one task per line, and start. Each
+      task fills the screen on its own until you mark it done, and the next one
+      takes its place. There is no counter and no way to postpone.
+    </p>
+    <p>
+      Something that comes up while you are working can be added without leaving
+      the task at hand, and whatever you do not finish is still waiting tomorrow.
+    </p>
   </description>
 
-  <developer id="tld.vendor">
-    <name>Developer name</name>
+  <developer id="camp.pietro">
+    <name>Pietro Campagnano</name>
   </developer>
 
-  <!-- Required: Should be a link to the upstream homepage for the component -->
-  <url type="homepage">https://example.org/</url>
-  <!-- Recommended: It is highly recommended for open-source projects to display the source code repository -->
-  <url type="vcs-browser">https://example.org/repository</url>
-  <!-- Should point to the software's bug tracking system, for users to report new bugs -->
-  <url type="bugtracker">https://example.org/issues</url>
-  <!-- Should link a FAQ page for this software, to answer some of the most-asked questions in detail -->
-  <!-- URLs of this type should point to a webpage where users can submit or modify translations of the upstream project -->
-  <url type="translate">https://example.org/translate</url>
-  <url type="faq">https://example.org/faq</url>
-  <!-- Should provide a web link to an online user's reference, a software manual or help page -->
-  <url type="help">https://example.org/help</url>
-  <!-- URLs of this type should point to a webpage showing information on how to donate to the described software project -->
-  <url type="donation">https://example.org/donate</url>
-  <!-- This could for example be an HTTPS URL to an online form or a page describing how to contact the developer -->
-  <url type="contact">https://example.org/contact</url>
-  <!-- URLs of this type should point to a webpage showing information on how to contribute to the described software project -->
-  <url type="contribute">https://example.org/contribute</url>
+  <url type="homepage">https://github.com/fain182/nowdothis</url>
+  <url type="bugtracker">https://github.com/fain182/nowdothis/issues</url>
+  <url type="vcs-browser">https://github.com/fain182/nowdothis</url>
 
   <translation type="gettext">nowdothis</translation>
-  <!-- All graphical applications having a desktop file must have this tag in the MetaInfo.
-     If this is present, appstreamcli compose will pull icons, keywords and categories from the desktop file. -->
   <launchable type="desktop-id">camp.pietro.NowDoThis.desktop</launchable>
-  <!-- Use the OARS website (https://hughsie.github.io/oars/generate.html) to generate these and make sure to use oars-1.1 -->
   <content_rating type="oars-1.1" />
 
-  <!-- Applications should set a brand color in both light and dark variants like so -->
   <branding>
-    <color type="primary" scheme_preference="light">#ff00ff</color>
-    <color type="primary" scheme_preference="dark">#993d3d</color>
+    <color type="primary" scheme_preference="light">#c7e9d0</color>
+    <color type="primary" scheme_preference="dark">#1b3a2a</color>
   </branding>
 
   <screenshots>
     <screenshot type="default">
-      <image>https://example.org/example1.png</image>
-      <caption>A caption</caption>
+      <image>https://raw.githubusercontent.com/fain182/nowdothis/main/data/screenshots/doing.png</image>
+      <caption>One task at a time, with nothing else on screen</caption>
     </screenshot>
     <screenshot>
-      <image>https://example.org/example2.png</image>
-      <caption>A caption</caption>
+      <image>https://raw.githubusercontent.com/fain182/nowdothis/main/data/screenshots/planning.png</image>
+      <caption>The day written out, one task per line</caption>
+    </screenshot>
+    <screenshot>
+      <image>https://raw.githubusercontent.com/fain182/nowdothis/main/data/screenshots/all-done.png</image>
+      <caption>Nothing left to do</caption>
     </screenshot>
   </screenshots>
 
+  <recommends>
+    <control>keyboard</control>
+    <control>pointing</control>
+    <control>touch</control>
+  </recommends>
+
   <releases>
-    <release version="1.0.1" date="2024-01-18">
-      <url type="details">https://example.org/changelog.html#version_1.0.1</url>
+    <release version="0.1.0" date="2026-07-25">
       <description translate="no">
-        <p>Release description</p>
-        <ul>
-          <li>List of changes</li>
-          <li>List of changes</li>
-        </ul>
+        <p>First release.</p>
       </description>
     </release>
   </releases>

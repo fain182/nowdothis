@@ -1,10 +1,11 @@
 [Desktop Entry]
-Name=Nowdothis
+Name=Now Do This
+Comment=Do one task at a time
 Exec=nowdothis
 Icon=camp.pietro.NowDoThis
 Terminal=false
 Type=Application
 Categories=Utility;
-Keywords=GTK;
+Keywords=todo;task;tasks;list;today;focus;productivity;
 StartupNotify=true
 DBusActivatable=true
