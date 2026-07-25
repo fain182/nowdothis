@@ -118,6 +118,32 @@
                                     </style>
                                   </object>
                                 </child>
+                                <child>
+                                  <object class="GtkBox" id="celebration_actions">
+                                    <property name="halign">center</property>
+                                    <property name="spacing">12</property>
+                                    <child>
+                                      <object class="GtkButton" id="plan_button">
+                                        <property name="label" translatable="yes">Plan More</property>
+                                        <style>
+                                          <class name="pill"/>
+                                        </style>
+                                      </object>
+                                    </child>
+                                    <child>
+                                      <!-- Stopping is the recommended path here,
+                                           so it carries the emphasis. -->
+                                      <object class="GtkButton">
+                                        <property name="label" translatable="yes">Done for Today</property>
+                                        <property name="action-name">app.quit</property>
+                                        <style>
+                                          <class name="pill"/>
+                                          <class name="suggested-action"/>
+                                        </style>
+                                      </object>
+                                    </child>
+                                  </object>
+                                </child>
                               </object>
                             </property>
                           </object>

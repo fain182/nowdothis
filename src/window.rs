@@ -54,6 +54,10 @@ mod imp {
         #[template_child]
         pub celebration_message: TemplateChild<gtk::Label>,
         #[template_child]
+        pub plan_button: TemplateChild<gtk::Button>,
+        #[template_child]
+        pub celebration_actions: TemplateChild<gtk::Box>,
+        #[template_child]
         pub edit_button: TemplateChild<gtk::Button>,
         #[template_child]
         pub add_button: TemplateChild<gtk::Button>,
@@ -131,6 +135,15 @@ mod imp {
                 move |_| window.present_add_dialog()
             ));
 
+            self.plan_button.connect_clicked(clone!(
+                #[weak]
+                window,
+                move |_| {
+                    let imp = window.imp();
+                    imp.navigation_view.push(&imp.plan_page.get());
+                }
+            ));
+
             self.start_button.connect_clicked(clone!(
                 #[weak]
                 window,
@@ -192,6 +205,9 @@ impl NowdothisWindow {
         imp.done_button.set_visible(!tasks.is_empty());
         imp.celebration_icon.set_visible(tasks.is_empty());
         imp.celebration_message.set_visible(tasks.is_empty());
+        // One way out at a time: the call to action replaces the header button.
+        imp.celebration_actions.set_visible(tasks.is_empty());
+        imp.edit_button.set_visible(!tasks.is_empty());
 
         imp.placeholder
             .set_visible(imp.task_view.buffer().char_count() == 0);
