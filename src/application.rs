@@ -117,6 +117,9 @@ impl NowdothisApplication {
             .application_name("Now Do This")
             .application_icon("camp.pietro.NowDoThis")
             .developer_name("Pietro Campagnano")
+            .website("https://github.com/fain182/nowdothis")
+            .issue_url("https://github.com/fain182/nowdothis/issues")
+            .license_type(gtk::License::Gpl30)
             .version(VERSION)
             .developers(vec!["Pietro Campagnano"])
             // Translators: Replace "translator-credits" with your name/username, and optionally an email or URL.
