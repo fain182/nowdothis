@@ -1,6 +1,10 @@
+<img src="data/icons/camp.pietro.NowDoThis.png" width="128" align="left" alt="">
+
 # Now Do This
 
 A to-do app for today.
+
+<br clear="left">
 
 You write the day's tasks as plain lines of text, then the app shows you one
 at a time. There is no counter, no timer, and no way to postpone: the only
@@ -9,6 +13,8 @@ up while you are working can be added without leaving that screen — they go to
 the end of the list, so they never change what you are doing.
 
 Whatever is left undone is still there tomorrow.
+
+![The app showing a single task, with a Done button beneath it](data/screenshots/doing.png)
 
 Inspired by [nowdothis.com](http://nowdothis.com/) by William Cotton and
 Jakob Lodwick.
