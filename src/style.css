@@ -34,6 +34,15 @@
   background-image: radial-gradient(circle at 50% 44%,
                                     color-mix(in srgb, var(--accent-bg-color) 20%, transparent) 0%,
                                     transparent 58%);
+  transition: background-image 800ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+/* Clearing the list turns the wash green and lets it bloom outwards. The
+   moment is worth a slower curve than the transitions between tasks. */
+.focus-surface.finished {
+  background-image: radial-gradient(circle at 50% 44%,
+                                    color-mix(in srgb, var(--success-color) 30%, transparent) 0%,
+                                    transparent 80%);
 }
 
 /* libadwaita marks the window's size class for us. In the smallest supported

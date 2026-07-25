@@ -38,8 +38,10 @@ variables yourself:
         NOWDOTHIS_SNAPSHOT_PAGE=plan _build/screenshot/debug/nowdothis
 
 `NOWDOTHIS_SNAPSHOT_ACTION` fires an action first, for states that only appear
-on demand such as a dialog, and `NOWDOTHIS_TAB_ORDER=1` prints the focus chain,
-which is how keyboard reachability gets checked after a layout change.
+on demand such as a dialog, `NOWDOTHIS_SNAPSHOT_DELAY` shortens the wait
+so an animation can be caught part way through, and `NOWDOTHIS_TAB_ORDER=1`
+prints the focus chain, which is how keyboard reachability gets checked after a
+layout change.
 
 Pair it with `ADW_DEBUG_COLOR_SCHEME=prefer-dark` and
 `ADW_DEBUG_HIGH_CONTRAST=1`. Dark mode, high contrast and text scaling are all

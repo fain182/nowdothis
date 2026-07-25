@@ -25,6 +25,8 @@ use crate::window::NowdothisWindow;
 ///   empty or full list would otherwise open on.
 /// - `NOWDOTHIS_SNAPSHOT_ACTION` — an action to fire first, so states that only
 ///   appear on demand, such as a dialog, can be captured.
+/// - `NOWDOTHIS_SNAPSHOT_DELAY` — milliseconds to wait after that action, to
+///   catch an animation part way through.
 pub fn capture(window: &NowdothisWindow) {
     let Ok(path) = std::env::var("NOWDOTHIS_SNAPSHOT") else {
         return;
@@ -69,8 +71,14 @@ pub fn capture(window: &NowdothisWindow) {
             }
         }
 
+        // Shortened to catch an animation part way through.
+        let delay = std::env::var("NOWDOTHIS_SNAPSHOT_DELAY")
+            .ok()
+            .and_then(|value| value.parse().ok())
+            .unwrap_or(700);
+
         let window = window.clone();
-        glib::timeout_add_local_once(std::time::Duration::from_millis(700), move || {
+        glib::timeout_add_local_once(std::time::Duration::from_millis(delay), move || {
             if std::env::var("NOWDOTHIS_TAB_ORDER").is_ok() {
                 for step in 1..=6 {
                     window.child_focus(gtk::DirectionType::TabForward);

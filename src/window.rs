@@ -320,6 +320,14 @@ impl NowdothisWindow {
         // Hidden rather than insensitive: a greyed-out suggested-action button
         // reads as broken, and there is nothing to start anyway.
         imp.start_button.set_visible(!tasks.is_empty());
+        // Only the finished state is touched here: whether the wash is drawn at
+        // all belongs to set_vignette, which answers to the contrast setting.
+        if tasks.is_empty() {
+            imp.focus_surface.add_css_class("finished");
+        } else {
+            imp.focus_surface.remove_css_class("finished");
+        }
+
         // One way out at a time: with nothing left to do, Plan More is the only
         // offer to add something, and Edit List leads where it already goes.
         imp.edit_button.set_visible(!tasks.is_empty());
