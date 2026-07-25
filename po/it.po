@@ -1,0 +1,213 @@
+# Italian translations for nowdothis package
+# Traduzioni italiane per il pacchetto nowdothis.
+# Copyright (C) 2026 Pietro Campagnano
+# This file is distributed under the same license as the nowdothis package.
+# Pietro Campagnano <hello@pietro.camp>, 2026.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: nowdothis\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-07-25 15:26+0200\n"
+"PO-Revision-Date: 2026-07-25 15:26+0200\n"
+"Last-Translator: Pietro Campagnano <hello@pietro.camp>\n"
+"Language-Team: Italian\n"
+"Language: it\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: data/camp.pietro.NowDoThis.desktop.in:2
+#: data/camp.pietro.NowDoThis.metainfo.xml.in:7 src/window.ui:6
+#: src/window.ui:18
+msgid "Now Do This"
+msgstr "Now Do This"
+
+
+#: data/camp.pietro.NowDoThis.desktop.in:3
+#: data/camp.pietro.NowDoThis.metainfo.xml.in:8
+msgid "Do today's tasks one by one"
+msgstr "Fai le cose di oggi una alla volta"
+
+
+#: data/camp.pietro.NowDoThis.desktop.in:9
+msgid "todo;task;tasks;list;today;focus;productivity;"
+msgstr "todo;attività;compiti;cose;lista;elenco;oggi;concentrazione;produttività;"
+
+
+#: data/camp.pietro.NowDoThis.metainfo.xml.in:10
+msgid ""
+"Now Do This shows you a single task at a time, so you can get on with it "
+"instead of looking at a list."
+msgstr "Now Do This ti mostra una cosa da fare alla volta, così puoi farla invece di guardare una lista."
+
+
+#: data/camp.pietro.NowDoThis.metainfo.xml.in:14
+msgid ""
+"Write down what you are doing today, one task per line, and start. Each task "
+"fills the screen on its own until you mark it done, and the next one takes "
+"its place. There is no counter and no way to postpone."
+msgstr "Scrivi cosa fai oggi, una cosa per riga, e parti. Ogni cosa da fare occupa lo schermo da sola finché non la segni come fatta, e la successiva prende il suo posto. Non c'è un contatore e non si può rimandare."
+
+
+#: data/camp.pietro.NowDoThis.metainfo.xml.in:19
+msgid ""
+"Something that comes up while you are working can be added without leaving "
+"the task at hand, and whatever you do not finish is still waiting tomorrow."
+msgstr "Quello che salta fuori mentre lavori si può aggiungere senza lasciare la cosa che hai per le mani, e ciò che non finisci ti aspetta domani."
+
+
+#: data/camp.pietro.NowDoThis.metainfo.xml.in:26
+msgid "Pietro Campagnano"
+msgstr "Pietro Campagnano"
+
+
+#: data/camp.pietro.NowDoThis.metainfo.xml.in:45
+msgid "One task at a time, with nothing else on screen"
+msgstr "Una cosa alla volta, e nient'altro sullo schermo"
+
+
+#: data/camp.pietro.NowDoThis.metainfo.xml.in:49
+msgid "The day written out, one task per line"
+msgstr "La giornata scritta, una cosa per riga"
+
+
+#: data/camp.pietro.NowDoThis.metainfo.xml.in:53
+msgid "Nothing left to do"
+msgstr "Non è rimasto nulla da fare"
+
+
+#. Translators: Replace "translator-credits" with your name/username, and optionally an email or URL.
+#: src/application.rs:123
+msgid "translator-credits"
+msgstr "Pietro Campagnano <hello@pietro.camp>"
+
+
+#: src/shortcuts-dialog.ui:6
+msgid "Shortcuts"
+msgstr "Scorciatoie"
+
+
+#: src/shortcuts-dialog.ui:9
+msgctxt "shortcut window"
+msgid "Start the List or Mark Done"
+msgstr "Avvia la lista o segna come fatto"
+
+
+#: src/shortcuts-dialog.ui:15
+msgctxt "shortcut window"
+msgid "Add a Task"
+msgstr "Aggiungi una cosa da fare"
+
+
+#: src/shortcuts-dialog.ui:21
+msgctxt "shortcut window"
+msgid "Show Shortcuts"
+msgstr "Mostra le scorciatoie"
+
+
+#: src/shortcuts-dialog.ui:27
+msgctxt "shortcut window"
+msgid "Quit"
+msgstr "Esci"
+
+
+#: src/window.rs:338
+msgid "Added to the end of the list"
+msgstr "Aggiunta in fondo alla lista"
+
+
+#: src/window.rs:344
+msgid "What came up?"
+msgstr "Cosa è saltato fuori?"
+
+
+#: src/window.rs:348 src/window.ui:44
+msgid "Add Task"
+msgstr "Aggiungi"
+
+
+#: src/window.rs:350
+msgid "Cancel"
+msgstr "Annulla"
+
+
+#: src/window.rs:351
+msgid "Add"
+msgstr "Aggiungi"
+
+
+#: src/window.rs:395
+msgid "Could not save your list"
+msgstr "Impossibile salvare la lista"
+
+
+#: src/window.ui:29 src/window.ui:263
+msgid "Main Menu"
+msgstr "Menu principale"
+
+
+#: src/window.ui:35
+msgid "Edit List"
+msgstr "Modifica lista"
+
+
+#: src/window.ui:78
+msgid "Now do this"
+msgstr "Ora fai questo"
+
+
+#: src/window.ui:151
+msgid "All done"
+msgstr "Tutto fatto"
+
+
+#: src/window.ui:161
+msgid "Time to relax"
+msgstr "È ora di rilassarsi"
+
+
+#: src/window.ui:195
+msgid "Done"
+msgstr "Fatto"
+
+
+#: src/window.ui:214
+msgid "Plan More"
+msgstr "Aggiungi altro"
+
+
+#: src/window.ui:222
+msgid "Done for Today"
+msgstr "Per oggi basta"
+
+
+#: src/window.ui:250
+msgid "Today"
+msgstr "Oggi"
+
+
+#: src/window.ui:269
+msgid "Start"
+msgstr "Avvia"
+
+
+#: src/window.ui:301
+msgid "Task list, one task per line"
+msgstr "Lista delle cose da fare, una per riga"
+
+
+#: src/window.ui:317
+msgid "What are you doing today? One per line."
+msgstr "Cosa fai oggi? Una cosa per riga."
+
+
+#: src/window.ui:341
+msgid "_Keyboard Shortcuts"
+msgstr "_Scorciatoie da tastiera"
+
+
+#: src/window.ui:345
+msgid "_About Now Do This"
+msgstr "_Informazioni su Now Do This"
