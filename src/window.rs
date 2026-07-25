@@ -296,6 +296,10 @@ impl NowdothisWindow {
 
         back.set_text(text);
         imp.task_stack.set_visible_child_name(back_name);
+
+        // The task changes while focus stays on the Done button, so a screen
+        // reader would otherwise never hear what came next.
+        back.announce(text, gtk::AccessibleAnnouncementPriority::Medium);
     }
 
     fn on_list_edited(&self, buffer: &gtk::TextBuffer) {

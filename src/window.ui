@@ -295,6 +295,7 @@
                                     <style>
                                       <class name="task-list"/>
                                     </style>
+                                    <property name="accepts-tab">False</property>
                                     <property name="accessible-role">text-box</property>
                                     <accessibility>
                                       <property name="label" translatable="yes">Task list, one task per line</property>
@@ -303,6 +304,7 @@
                                 </property>
                                 <child type="overlay">
                                   <object class="GtkLabel" id="placeholder">
+                                    <property name="accessible-role">presentation</property>
                                     <property name="can-target">False</property>
                                     <property name="halign">start</property>
                                     <property name="valign">start</property>
