@@ -266,7 +266,12 @@
                         </child>
                         <child type="end">
                           <object class="GtkButton" id="start_button">
-                            <property name="label" translatable="yes">Start</property>
+                            <property name="child">
+                              <object class="AdwButtonContent">
+                                <property name="icon-name">media-playback-start-symbolic</property>
+                                <property name="label" translatable="yes">Start</property>
+                              </object>
+                            </property>
                             <style>
                               <class name="suggested-action"/>
                             </style>
