@@ -42,6 +42,8 @@ mod imp {
         #[template_child]
         pub plan_page: TemplateChild<adw::NavigationPage>,
         #[template_child]
+        pub prompt_revealer: TemplateChild<gtk::Revealer>,
+        #[template_child]
         pub task_stack: TemplateChild<gtk::Stack>,
         #[template_child]
         pub task_label_a: TemplateChild<gtk::Label>,
@@ -212,6 +214,8 @@ impl NowdothisWindow {
                 imp.action_stack.set_visible_child_name("done");
             }
         }
+
+        imp.prompt_revealer.set_reveal_child(!tasks.is_empty());
 
         imp.placeholder
             .set_visible(imp.task_view.buffer().char_count() == 0);
