@@ -95,10 +95,22 @@
               <object class="AdwNavigationPage" id="plan_page">
                 <property name="title" translatable="yes">Your List</property>
                 <property name="tag">plan</property>
+                <!-- Leaving this page is "Start", not "back": the button below
+                     is the only way forward. -->
+                <property name="can-pop">False</property>
                 <property name="child">
                   <object class="AdwToolbarView">
                     <child type="top">
-                      <object class="AdwHeaderBar"/>
+                      <object class="AdwHeaderBar">
+                        <child type="end">
+                          <object class="GtkButton" id="start_button">
+                            <property name="label" translatable="yes">Start</property>
+                            <style>
+                              <class name="suggested-action"/>
+                            </style>
+                          </object>
+                        </child>
+                      </object>
                     </child>
                     <property name="content">
                       <object class="GtkScrolledWindow">

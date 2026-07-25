@@ -53,6 +53,8 @@ mod imp {
         pub edit_button: TemplateChild<gtk::Button>,
         #[template_child]
         pub add_button: TemplateChild<gtk::Button>,
+        #[template_child]
+        pub start_button: TemplateChild<gtk::Button>,
 
         pub tasks: RefCell<TaskList>,
         pub storage: OnceCell<Storage>,
@@ -125,6 +127,14 @@ mod imp {
                 move |_| window.present_add_dialog()
             ));
 
+            self.start_button.connect_clicked(clone!(
+                #[weak]
+                window,
+                move |_| {
+                    window.imp().navigation_view.pop();
+                }
+            ));
+
             // Landing on the planning page means the user is here to type.
             self.plan_page.connect_showing(clone!(
                 #[weak]
@@ -172,8 +182,8 @@ impl NowdothisWindow {
         imp.task_label.set_text(tasks.current().unwrap_or_default());
         imp.placeholder
             .set_visible(imp.task_view.buffer().char_count() == 0);
-        // With nothing to do, there is nothing to go back to.
-        imp.plan_page.set_can_pop(!tasks.is_empty());
+        // With nothing written down there is nothing to start.
+        imp.start_button.set_sensitive(!tasks.is_empty());
     }
 
     fn on_list_edited(&self, buffer: &gtk::TextBuffer) {
