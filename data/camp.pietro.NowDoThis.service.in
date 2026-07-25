@@ -1,0 +1,3 @@
+[D-BUS Service]
+Name=camp.pietro.NowDoThis
+Exec=@bindir@/nowdothis --gapplication-service

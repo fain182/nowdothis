@@ -1,0 +1,6 @@
+# List of source files containing translatable strings.
+# Please keep this file sorted alphabetically.
+data/camp.pietro.NowDoThis.desktop.in
+data/camp.pietro.NowDoThis.metainfo.xml.in
+data/camp.pietro.NowDoThis.gschema.xml
+src/window.ui

@@ -1,0 +1,15 @@
+# Meson
+/_build/
+/builddir/
+
+# Cargo
+/target/
+
+# Flatpak
+/.flatpak-builder/
+/repo/
+/.flatpak/
+
+# Editor backups
+*~
+*.swp
