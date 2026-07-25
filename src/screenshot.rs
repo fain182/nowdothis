@@ -51,27 +51,42 @@ pub fn capture(window: &NowdothisWindow) {
     }
     imp.navigation_view.set_animate_transitions(true);
 
-    if let Ok(action) = std::env::var("NOWDOTHIS_SNAPSHOT_ACTION") {
-        WidgetExt::activate_action(window, &action, None).expect("the action exists");
-    }
-
     let window = window.clone();
-    glib::timeout_add_local_once(std::time::Duration::from_millis(900), move || {
-        let paintable = gtk::WidgetPaintable::new(Some(&window));
-        let snapshot = gtk::Snapshot::new();
-        paintable.snapshot(&snapshot, window.width() as f64, window.height() as f64);
-
-        match (
-            snapshot.to_node(),
-            window.native().and_then(|native| native.renderer()),
-        ) {
-            (Some(node), Some(renderer)) => renderer
-                .render_texture(&node, None)
-                .save_to_png(&path)
-                .expect("the snapshot is written"),
-            _ => eprintln!("nothing to render: is the window mapped?"),
+    // The application is only attached to the window after construction, so the
+    // action has to wait a turn of the loop.
+    glib::timeout_add_local_once(std::time::Duration::from_millis(400), move || {
+        if let Ok(action) = std::env::var("NOWDOTHIS_SNAPSHOT_ACTION") {
+            // App actions are not reachable through a widget's action muxer.
+            match action.strip_prefix("app.") {
+                Some(name) => window
+                    .application()
+                    .expect("the window has an application")
+                    .activate_action(name, None),
+                None => {
+                    WidgetExt::activate_action(&window, &action, None)
+                        .expect("the action exists");
+                }
+            }
         }
 
-        window.close();
+        let window = window.clone();
+        glib::timeout_add_local_once(std::time::Duration::from_millis(700), move || {
+            let paintable = gtk::WidgetPaintable::new(Some(&window));
+            let snapshot = gtk::Snapshot::new();
+            paintable.snapshot(&snapshot, window.width() as f64, window.height() as f64);
+
+            match (
+                snapshot.to_node(),
+                window.native().and_then(|native| native.renderer()),
+            ) {
+                (Some(node), Some(renderer)) => renderer
+                    .render_texture(&node, None)
+                    .save_to_png(&path)
+                    .expect("the snapshot is written"),
+                _ => eprintln!("nothing to render: is the window mapped?"),
+            }
+
+            window.close();
+        });
     });
 }
