@@ -21,7 +21,7 @@
 use gettextrs::gettext;
 use adw::prelude::*;
 use adw::subclass::prelude::*;
-use gtk::{gio, glib};
+use gtk::{gdk, gio, glib};
 
 use crate::config::VERSION;
 use crate::NowdothisWindow;
@@ -49,6 +49,18 @@ mod imp {
     }
 
     impl ApplicationImpl for NowdothisApplication {
+        fn startup(&self) {
+            self.parent_startup();
+
+            let provider = gtk::CssProvider::new();
+            provider.load_from_resource("/camp/pietro/NowDoThis/style.css");
+            gtk::style_context_add_provider_for_display(
+                &gdk::Display::default().expect("a display is open"),
+                &provider,
+                gtk::STYLE_PROVIDER_PRIORITY_APPLICATION,
+            );
+        }
+
         // We connect to the activate callback to create a window when the application
         // has been launched. Additionally, this callback notifies us when the user
         // tries to launch a "second instance" of the application. When they try

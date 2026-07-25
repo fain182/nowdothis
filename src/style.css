@@ -1,0 +1,16 @@
+/* Sizes are percentages of the default font size, like Adwaita's own title
+ * classes, so they follow the desktop's text scaling. */
+
+/* The task at hand is the whole screen. Large enough to command attention,
+ * but lighter than Adwaita's .title-1 weight so that a task wrapping onto
+ * three lines still reads as a sentence rather than a headline. */
+.task {
+  font-size: 215%;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+/* The list is a writing surface, not a form field. */
+.task-list {
+  font-size: 118%;
+}
