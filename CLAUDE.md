@@ -24,32 +24,26 @@ decision is measured against — its criteria live at
 
 ## Seeing the interface
 
-Design work here is done by looking, not by reasoning about markup. Temporarily
-add this at the end of `constructed()` in `src/window.rs`, run, look at the PNG,
-then remove it before committing:
+Design work here is done by looking, not by reasoning about markup. The window
+can render itself to a PNG under the `screenshot` Cargo feature, which is off
+by default and so never reaches a released build. `src/screenshot.rs` holds it.
 
-```rust
-if let Ok(path) = std::env::var("NOWDOTHIS_SNAPSHOT") {
-    let target = window.clone();
-    glib::timeout_add_local_once(std::time::Duration::from_millis(900), move || {
-        let paintable = gtk::WidgetPaintable::new(Some(&target));
-        let snapshot = gtk::Snapshot::new();
-        paintable.snapshot(&snapshot, target.width() as f64, target.height() as f64);
-        if let (Some(node), Some(renderer)) =
-            (snapshot.to_node(), target.native().and_then(|n| n.renderer()))
-        {
-            renderer.render_texture(&node, None).save_to_png(&path).unwrap();
-        }
-        target.close();
-    });
-}
-```
+    ./scripts/screenshots.sh          # regenerates what the metainfo points at
 
-Pair it with `ADW_DEBUG_COLOR_SCHEME=prefer-dark`, `ADW_DEBUG_HIGH_CONTRAST=1`,
-and `gtk::Settings::set_gtk_xft_dpi` for large text — dark mode, high contrast
-and text scaling are all Circle criteria, and all three have caught real
-problems. Point `XDG_DATA_HOME` at a scratch directory so real tasks are left
-alone.
+For a one-off look at some other state, build with the feature and set the
+variables yourself:
+
+    cargo build --features screenshot --target-dir _build/screenshot
+    XDG_DATA_HOME=/tmp/ndt NOWDOTHIS_SNAPSHOT=/tmp/shot.png \
+        NOWDOTHIS_SNAPSHOT_PAGE=plan _build/screenshot/debug/nowdothis
+
+Pair it with `ADW_DEBUG_COLOR_SCHEME=prefer-dark` and
+`ADW_DEBUG_HIGH_CONTRAST=1`. Dark mode, high contrast and text scaling are all
+Circle criteria, and all three have caught real problems. Point
+`XDG_DATA_HOME` at a scratch directory so real tasks are left alone.
+
+Run `./scripts/screenshots.sh` after any interface change: a store listing
+showing an older version of the app reads as a bug.
 
 ## Gotchas
 

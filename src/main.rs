@@ -21,6 +21,8 @@
 mod application;
 mod config;
 mod models;
+#[cfg(feature = "screenshot")]
+mod screenshot;
 mod services;
 mod window;
 

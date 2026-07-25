@@ -32,6 +32,7 @@ Open the project and press <kbd>F5</kbd> to build and run it inside Flatpak.
 ./scripts/build.sh    # build into ./_install
 ./scripts/run.sh      # build, then run
 ./scripts/test.sh     # unit tests
+./scripts/screenshots.sh   # regenerate the screenshots in data/screenshots
 ```
 
 The scripts wrap Meson and Cargo; `scripts/build.sh` configures the build

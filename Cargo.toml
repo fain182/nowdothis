@@ -3,6 +3,10 @@ name = "nowdothis"
 version = "0.1.0"
 edition = "2021"
 
+[features]
+# Adds a hook that renders the window to a PNG; see scripts/screenshots.sh.
+screenshot = []
+
 [dependencies]
 gettext-rs = { version = "0.7", features = ["gettext-system"] }
 gtk = { version = "0.9", package = "gtk4", features = ["gnome_47"] }

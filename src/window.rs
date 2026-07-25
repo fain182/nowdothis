@@ -191,6 +191,9 @@ mod imp {
             }
 
             window.refresh();
+
+            #[cfg(feature = "screenshot")]
+            crate::screenshot::capture(&window);
         }
     }
 
