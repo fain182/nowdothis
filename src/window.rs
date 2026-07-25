@@ -54,6 +54,8 @@ mod imp {
         #[template_child]
         pub action_stack: TemplateChild<gtk::Stack>,
         #[template_child]
+        pub focus_box: TemplateChild<gtk::Box>,
+        #[template_child]
         pub focus_surface: TemplateChild<gtk::ScrolledWindow>,
         #[template_child]
         pub task_view: TemplateChild<gtk::TextView>,

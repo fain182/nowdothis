@@ -35,3 +35,15 @@
                                     color-mix(in srgb, var(--accent-bg-color) 20%, transparent) 0%,
                                     transparent 58%);
 }
+
+/* libadwaita marks the window's size class for us. In the smallest supported
+   window the task at full size pushes Done past the bottom edge. */
+.small .task {
+  font-size: 150%;
+}
+
+.small .action {
+  font-size: 100%;
+  padding-top: 8px;
+  padding-bottom: 8px;
+}
