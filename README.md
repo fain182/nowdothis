@@ -16,8 +16,9 @@ Whatever is left undone is still there tomorrow.
 
 ![The app showing a single task, with a Done button beneath it](data/screenshots/doing.png)
 
-Inspired by [nowdothis.com](http://nowdothis.com/) by William Cotton and
-Jakob Lodwick.
+Inspired by the original nowdothis.com by William Cotton and Jakob Lodwick.
+The site is gone; the domain now hosts something unrelated, so the link points
+to [an archived copy](https://web.archive.org/web/20130121193906/http://www.nowdothis.com/).
 
 ## Building
 
