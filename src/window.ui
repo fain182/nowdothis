@@ -207,7 +207,7 @@
                                             <style>
                                               <class name="pill"/>
                                               <class name="suggested-action"/>
-                                              <class name="task-done"/>
+                                              <class name="action"/>
                                             </style>
                                           </object>
                                         </property>
@@ -275,19 +275,28 @@
                             <property name="menu-model">primary_menu</property>
                           </object>
                         </child>
-                        <child type="end">
-                          <object class="GtkButton" id="start_button">
-                            <property name="child">
-                              <object class="AdwButtonContent">
-                                <property name="icon-name">media-playback-start-symbolic</property>
-                                <property name="label" translatable="yes">Start</property>
-                              </object>
-                            </property>
-                            <style>
-                              <class name="suggested-action"/>
-                            </style>
+                      </object>
+                    </child>
+                    <child type="bottom">
+                      <!-- Start is what the planning page is for, so it carries
+                           the same weight as Done does on the task page rather
+                           than sitting in a corner of the header. -->
+                      <object class="GtkButton" id="start_button">
+                        <property name="halign">center</property>
+                        <property name="width-request">240</property>
+                        <property name="margin-top">12</property>
+                        <property name="margin-bottom">18</property>
+                        <property name="child">
+                          <object class="AdwButtonContent">
+                            <property name="icon-name">media-playback-start-symbolic</property>
+                            <property name="label" translatable="yes">Start</property>
                           </object>
-                        </child>
+                        </property>
+                        <style>
+                          <class name="pill"/>
+                          <class name="suggested-action"/>
+                          <class name="action"/>
+                        </style>
                       </object>
                     </child>
                     <property name="content">

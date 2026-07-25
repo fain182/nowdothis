@@ -15,9 +15,9 @@
   font-size: 135%;
 }
 
-/* The one thing to press on the screen, so it carries a little more type and a
-   little more room than a default pill. */
-.task-done {
+/* The primary action of each screen: a little more type and room than a default
+   pill, so it reads as the thing to press. */
+.action {
   font-size: 118%;
   padding-top: 14px;
   padding-bottom: 14px;
