@@ -25,10 +25,13 @@
 
 /* A vignette centred on the task, drawing the eye to it rather than decorating
    the window. Built from the user's accent colour so it belongs to their
-   desktop. The class is removed altogether under high contrast, which is
-   handled in window.rs: the media query alone did not take effect here. */
+   desktop. Built on the background accent rather than the standalone one: this
+   is a background, and the standalone variant is darkened for the light style,
+   which turns the wash grey on white. The class is removed altogether under
+   high contrast, which is handled in window.rs: the media query alone did not
+   take effect here. */
 .focus-surface {
   background-image: radial-gradient(circle at 50% 44%,
-                                    color-mix(in srgb, var(--accent-color) 20%, transparent) 0%,
+                                    color-mix(in srgb, var(--accent-bg-color) 20%, transparent) 0%,
                                     transparent 58%);
 }
