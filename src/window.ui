@@ -158,7 +158,7 @@
             <!-- Planning: the whole list as free text, one task per line. -->
             <child>
               <object class="AdwNavigationPage" id="plan_page">
-                <property name="title" translatable="yes">Your List</property>
+                <property name="title" translatable="yes">Today</property>
                 <property name="tag">plan</property>
                 <!-- Leaving this page is "Start", not "back": the button below
                      is the only way forward. -->
@@ -215,7 +215,7 @@
                                     <property name="margin-top">22</property>
                                     <property name="margin-start">20</property>
                                     <property name="margin-end">20</property>
-                                    <property name="label" translatable="yes">One task per line</property>
+                                    <property name="label" translatable="yes">What are you doing today? One per line.</property>
                                     <style>
                                       <class name="dim-label"/>
                                       <class name="task-list"/>

@@ -185,6 +185,15 @@ glib::wrapper! {
         @extends gtk::Widget, gtk::Window, gtk::ApplicationWindow, adw::ApplicationWindow,        @implements gio::ActionGroup, gio::ActionMap;
 }
 
+/// The task is shown as a sentence spoken to the user, so it is given a full
+/// stop unless it already ends in punctuation of its own.
+fn with_full_stop(task: &str) -> String {
+    match task.chars().last() {
+        Some(last) if last.is_alphanumeric() => format!("{task}."),
+        _ => task.to_string(),
+    }
+}
+
 impl NowdothisWindow {
     pub fn new<P: IsA<gtk::Application>>(application: &P) -> Self {
         glib::Object::builder()
@@ -199,7 +208,7 @@ impl NowdothisWindow {
         // Clearing the list earns a moment of its own, in the same place and at
         // the same size the tasks were, so the screen settles rather than jumps.
         match tasks.current() {
-            Some(task) => imp.task_label.set_text(task),
+            Some(task) => imp.task_label.set_text(&with_full_stop(task)),
             None => imp.task_label.set_text(&gettext("All done")),
         }
         imp.done_button.set_visible(!tasks.is_empty());
@@ -308,5 +317,22 @@ impl NowdothisWindow {
             imp.toast_overlay
                 .add_toast(adw::Toast::new(&gettext("Could not save your list")));
         }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::with_full_stop;
+
+    #[test]
+    fn a_plain_task_gains_a_full_stop() {
+        assert_eq!(with_full_stop("walk the dog"), "walk the dog.");
+    }
+
+    #[test]
+    fn existing_punctuation_is_left_alone() {
+        assert_eq!(with_full_stop("call Mum?"), "call Mum?");
+        assert_eq!(with_full_stop("ship it!"), "ship it!");
+        assert_eq!(with_full_stop("read chapter 3."), "read chapter 3.");
     }
 }
