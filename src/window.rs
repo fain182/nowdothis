@@ -68,8 +68,6 @@ mod imp {
         #[template_child]
         pub start_button: TemplateChild<gtk::Button>,
 
-        pub first_tag: OnceCell<gtk::TextTag>,
-
         pub tasks: RefCell<TaskList>,
         pub storage: OnceCell<Storage>,
         /// Guards against reacting to buffer changes we made ourselves.
@@ -113,8 +111,6 @@ mod imp {
             self.updating.set(true);
             self.task_view.buffer().set_text(&text);
             self.updating.set(false);
-
-            window.setup_list_styling();
 
 
             self.task_view.buffer().connect_changed(clone!(
@@ -225,35 +221,6 @@ impl NowdothisWindow {
             .build()
     }
 
-    /// The first line is the task you are about to do, so it carries the weight
-    /// the focus page will give it.
-    fn setup_list_styling(&self) {
-        let imp = self.imp();
-        let buffer = imp.task_view.buffer();
-
-        let first = buffer
-            .create_tag(Some("first"), &[("scale", &1.25f64), ("weight", &700i32)])
-            .expect("the tag table is empty at construction");
-        imp.first_tag.set(first).expect("set once");
-
-        self.restyle_list();
-    }
-
-
-    fn restyle_list(&self) {
-        let imp = self.imp();
-        let buffer = imp.task_view.buffer();
-        let tag = imp.first_tag.get().expect("tags exist after construction");
-
-        buffer.remove_tag(tag, &buffer.start_iter(), &buffer.end_iter());
-
-        let start = buffer.start_iter();
-        let mut end = start;
-        if !end.ends_line() {
-            end.forward_to_line_end();
-        }
-        buffer.apply_tag(tag, &start, &end);
-    }
 
 
     fn setup_actions(&self) {
@@ -351,7 +318,6 @@ impl NowdothisWindow {
             .to_string();
         *self.imp().tasks.borrow_mut() = TaskList::from_text(&text);
         self.save(&text);
-        self.restyle_list();
         self.refresh();
     }
 
@@ -415,7 +381,6 @@ impl NowdothisWindow {
         imp.updating.set(true);
         imp.task_view.buffer().set_text(text);
         imp.updating.set(false);
-        self.restyle_list();
 
         self.save(text);
     }
