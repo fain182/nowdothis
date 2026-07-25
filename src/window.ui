@@ -63,6 +63,22 @@
                                 <property name="margin-start">24</property>
                                 <property name="margin-end">24</property>
                                 <child>
+                                  <!-- Icon and text form one block, kept apart
+                                       from the button by the outer spacing. -->
+                                  <object class="GtkBox">
+                                    <property name="orientation">vertical</property>
+                                    <property name="spacing">20</property>
+                                  <child>
+                                  <object class="GtkImage" id="celebration_icon">
+                                    <property name="icon-name">object-select-symbolic</property>
+                                    <property name="pixel-size">72</property>
+                                    <property name="accessible-role">presentation</property>
+                                    <style>
+                                      <class name="success"/>
+                                    </style>
+                                  </object>
+                                </child>
+                                <child>
                                   <object class="GtkLabel" id="task_label">
                                     <property name="wrap">True</property>
                                     <property name="wrap-mode">word-char</property>
@@ -70,6 +86,8 @@
                                     <style>
                                       <class name="task"/>
                                     </style>
+                                  </object>
+                                </child>
                                   </object>
                                 </child>
                                 <child>

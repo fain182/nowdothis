@@ -50,6 +50,8 @@ mod imp {
         #[template_child]
         pub done_button: TemplateChild<gtk::Button>,
         #[template_child]
+        pub celebration_icon: TemplateChild<gtk::Image>,
+        #[template_child]
         pub edit_button: TemplateChild<gtk::Button>,
         #[template_child]
         pub add_button: TemplateChild<gtk::Button>,
@@ -179,7 +181,15 @@ impl NowdothisWindow {
         let imp = self.imp();
         let tasks = imp.tasks.borrow();
 
-        imp.task_label.set_text(tasks.current().unwrap_or_default());
+        // Clearing the list earns a moment of its own, in the same place and at
+        // the same size the tasks were, so the screen settles rather than jumps.
+        match tasks.current() {
+            Some(task) => imp.task_label.set_text(task),
+            None => imp.task_label.set_text(&gettext("All done")),
+        }
+        imp.done_button.set_visible(!tasks.is_empty());
+        imp.celebration_icon.set_visible(tasks.is_empty());
+
         imp.placeholder
             .set_visible(imp.task_view.buffer().char_count() == 0);
         // Hidden rather than insensitive: a greyed-out suggested-action button
@@ -209,10 +219,6 @@ impl NowdothisWindow {
         imp.tasks.borrow_mut().complete_current();
         let text = imp.tasks.borrow().to_text();
         self.write_list(&text);
-
-        if imp.tasks.borrow().is_empty() {
-            imp.navigation_view.push(&imp.plan_page.get());
-        }
         self.refresh();
     }
 
