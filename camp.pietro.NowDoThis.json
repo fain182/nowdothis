@@ -1,14 +1,13 @@
 {
     "id" : "camp.pietro.NowDoThis",
     "runtime" : "org.gnome.Platform",
-    "runtime-version" : "48",
+    "runtime-version" : "50",
     "sdk" : "org.gnome.Sdk",
     "sdk-extensions" : [
         "org.freedesktop.Sdk.Extension.rust-stable"
     ],
     "command" : "nowdothis",
     "finish-args" : [
-        "--share=network",
         "--share=ipc",
         "--socket=fallback-x11",
         "--device=dri",
@@ -40,10 +39,11 @@
             "name" : "nowdothis",
             "builddir" : true,
             "buildsystem" : "meson",
+            "run-tests" : true,
             "sources" : [
                 {
-                    "type" : "git",
-                    "url" : "file:///home/fain182/Projects/AI experiments/nowdothis"
+                    "type" : "dir",
+                    "path" : "."
                 }
             ],
             "config-opts" : [

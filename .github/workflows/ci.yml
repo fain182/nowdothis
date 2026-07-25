@@ -1,0 +1,26 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  flatpak:
+    name: Flatpak
+    runs-on: ubuntu-latest
+    container:
+      # Ships the GNOME SDK the manifest asks for, so nothing is downloaded
+      # on every run.
+      image: ghcr.io/flathub-infra/flatpak-github-actions:gnome-50
+      options: --privileged
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: flatpak/flatpak-github-actions/flatpak-builder@v6
+        with:
+          bundle: nowdothis.flatpak
+          manifest-path: camp.pietro.NowDoThis.json
+          cache-key: flatpak-builder-${{ github.sha }}
+          # Runs the meson test target inside the sandbox: the Rust unit tests
+          # and the desktop, appstream and schema validations.
+          run-tests: true

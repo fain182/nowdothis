@@ -40,6 +40,14 @@ else
   rust_target = 'debug'
 endif
 
+# Kept under meson so that one command runs every check, locally and in the
+# Flatpak sandbox, where flatpak-builder runs the test target for us.
+test('cargo test', cargo_bin,
+  args: ['test', cargo_opt],
+  env: cargo_env,
+  timeout: 600,
+)
+
 cargo_build = custom_target(
   'cargo-build',
   build_by_default: true,
