@@ -42,7 +42,13 @@ mod imp {
         #[template_child]
         pub plan_page: TemplateChild<adw::NavigationPage>,
         #[template_child]
-        pub task_label: TemplateChild<gtk::Label>,
+        pub task_stack: TemplateChild<gtk::Stack>,
+        #[template_child]
+        pub task_label_a: TemplateChild<gtk::Label>,
+        #[template_child]
+        pub task_label_b: TemplateChild<gtk::Label>,
+        #[template_child]
+        pub action_stack: TemplateChild<gtk::Stack>,
         #[template_child]
         pub task_view: TemplateChild<gtk::TextView>,
         #[template_child]
@@ -50,13 +56,7 @@ mod imp {
         #[template_child]
         pub done_button: TemplateChild<gtk::Button>,
         #[template_child]
-        pub celebration_icon: TemplateChild<gtk::Image>,
-        #[template_child]
-        pub celebration_message: TemplateChild<gtk::Label>,
-        #[template_child]
         pub plan_button: TemplateChild<gtk::Button>,
-        #[template_child]
-        pub celebration_actions: TemplateChild<gtk::Box>,
         #[template_child]
         pub edit_button: TemplateChild<gtk::Button>,
         #[template_child]
@@ -205,24 +205,43 @@ impl NowdothisWindow {
         let imp = self.imp();
         let tasks = imp.tasks.borrow();
 
-        // Clearing the list earns a moment of its own, in the same place and at
-        // the same size the tasks were, so the screen settles rather than jumps.
         match tasks.current() {
-            Some(task) => imp.task_label.set_text(&with_full_stop(task)),
-            None => imp.task_label.set_text(&gettext("All done")),
+            Some(task) => self.show_task(&with_full_stop(task)),
+            None => {
+                imp.task_stack.set_visible_child_name("done");
+                imp.action_stack.set_visible_child_name("done");
+            }
         }
-        imp.done_button.set_visible(!tasks.is_empty());
-        imp.celebration_icon.set_visible(tasks.is_empty());
-        imp.celebration_message.set_visible(tasks.is_empty());
-        // One way out at a time: the call to action replaces the header button.
-        imp.celebration_actions.set_visible(tasks.is_empty());
-        imp.edit_button.set_visible(!tasks.is_empty());
 
         imp.placeholder
             .set_visible(imp.task_view.buffer().char_count() == 0);
         // Hidden rather than insensitive: a greyed-out suggested-action button
         // reads as broken, and there is nothing to start anyway.
         imp.start_button.set_visible(!tasks.is_empty());
+        // One way out at a time: the call to action replaces the header button.
+        imp.edit_button.set_visible(!tasks.is_empty());
+    }
+
+    /// Writes the task into whichever of the two labels is offscreen and brings
+    /// it forward, so the stack has something to slide between. Leaves the
+    /// stack alone when the words have not changed, or editing the list would
+    /// animate on every keystroke.
+    fn show_task(&self, text: &str) {
+        let imp = self.imp();
+        imp.action_stack.set_visible_child_name("task");
+
+        let showing = imp.task_stack.visible_child_name();
+        let (front, back, back_name) = match showing.as_deref() {
+            Some("a") => (imp.task_label_a.get(), imp.task_label_b.get(), "b"),
+            _ => (imp.task_label_b.get(), imp.task_label_a.get(), "a"),
+        };
+
+        if showing.as_deref() != Some("done") && front.text() == text {
+            return;
+        }
+
+        back.set_text(text);
+        imp.task_stack.set_visible_child_name(back_name);
     }
 
     fn on_list_edited(&self, buffer: &gtk::TextBuffer) {
