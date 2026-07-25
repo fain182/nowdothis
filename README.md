@@ -22,18 +22,13 @@ Open the project and press <kbd>F5</kbd> to build and run it inside Flatpak.
 ### Command line
 
 ```sh
-meson setup _build --prefix="$PWD/_install"
-meson install -C _build
-./_install/bin/nowdothis
+./scripts/build.sh    # build into ./_install
+./scripts/run.sh      # build, then run
+./scripts/test.sh     # unit tests
 ```
 
-Rebuild after a change with `meson install -C _build`.
-
-### Tests
-
-```sh
-cargo test
-```
+The scripts wrap Meson and Cargo; `scripts/build.sh` configures the build
+directory on first use.
 
 ## Data
 
