@@ -6,11 +6,22 @@ on:
 
 jobs:
   flatpak:
-    name: Flatpak
-    runs-on: ubuntu-latest
+    name: Flatpak (${{ matrix.arch }})
+    runs-on: ${{ matrix.runner }}
+    strategy:
+      # One architecture failing should not hide the state of the other.
+      fail-fast: false
+      matrix:
+        include:
+          - arch: x86_64
+            runner: ubuntu-latest
+          - arch: aarch64
+            # Native arm64 runner rather than emulation, which would turn a
+            # three minute build into a much longer one.
+            runner: ubuntu-24.04-arm
     container:
-      # Ships the GNOME SDK the manifest asks for, so nothing is downloaded
-      # on every run.
+      # Multi-arch image, so the same tag serves both runners and ships the
+      # GNOME SDK the manifest asks for.
       image: ghcr.io/flathub-infra/flatpak-github-actions:gnome-50
       options: --privileged
     steps:
@@ -18,9 +29,10 @@ jobs:
 
       - uses: flatpak/flatpak-github-actions/flatpak-builder@v6
         with:
-          bundle: nowdothis.flatpak
+          bundle: nowdothis-${{ matrix.arch }}.flatpak
           manifest-path: camp.pietro.NowDoThis.json
-          cache-key: flatpak-builder-${{ github.sha }}
+          cache-key: flatpak-builder-${{ matrix.arch }}-${{ github.sha }}
+          arch: ${{ matrix.arch }}
           # Runs the meson test target inside the sandbox: the Rust unit tests
           # and the desktop, appstream and schema validations.
           run-tests: true
