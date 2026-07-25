@@ -4,7 +4,7 @@
          xmlns="http://usefulinc.com/ns/doap#">
 
   <name xml:lang="en">Now Do This</name>
-  <shortdesc xml:lang="en">Do one task at a time</shortdesc>
+  <shortdesc xml:lang="en">Do today's tasks one by one</shortdesc>
   <description xml:lang="en">A to-do app for a single day. Write down what you
   are doing today, one task per line, and the app shows you one at a time until
   the list is clear.</description>

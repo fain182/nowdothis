@@ -1,6 +1,6 @@
 # Now Do This
 
-A to-do app for a single day, not a general backlog.
+A to-do app for today.
 
 You write the day's tasks as plain lines of text, then the app shows you one
 at a time. There is no counter, no timer, and no way to postpone: the only

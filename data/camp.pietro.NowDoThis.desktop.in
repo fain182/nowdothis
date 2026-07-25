@@ -1,6 +1,6 @@
 [Desktop Entry]
 Name=Now Do This
-Comment=Do one task at a time
+Comment=Do today's tasks one by one
 Exec=nowdothis
 Icon=camp.pietro.NowDoThis
 Terminal=false
