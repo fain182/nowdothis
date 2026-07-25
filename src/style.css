@@ -12,5 +12,12 @@
 
 /* The list is a writing surface, not a form field. */
 .task-list {
-  font-size: 118%;
+  font-size: 135%;
+}
+
+/* Matches the size of the list's first line, so the hint sits exactly where the
+   first task will appear. The weight is left to the buffer tag, which applies it
+   to the real first line only: a hint should not shout. */
+.task-lead {
+  font-size: 169%;
 }
