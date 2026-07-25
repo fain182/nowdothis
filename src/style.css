@@ -14,3 +14,11 @@
 .task-list {
   font-size: 135%;
 }
+
+/* The one thing to press on the screen, so it carries a little more type and a
+   little more room than a default pill. */
+.task-done {
+  font-size: 118%;
+  padding-top: 14px;
+  padding-bottom: 14px;
+}

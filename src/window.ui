@@ -199,9 +199,15 @@
                                           <object class="GtkButton" id="done_button">
                                             <property name="label" translatable="yes">Done</property>
                                             <property name="halign">center</property>
+                                            <!-- About half the task column: enough
+                                                 presence for the one action on the
+                                                 screen, without becoming a bar that
+                                                 competes with the task itself. -->
+                                            <property name="width-request">240</property>
                                             <style>
                                               <class name="pill"/>
                                               <class name="suggested-action"/>
+                                              <class name="task-done"/>
                                             </style>
                                           </object>
                                         </property>
