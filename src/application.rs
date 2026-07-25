@@ -114,7 +114,7 @@ impl NowdothisApplication {
     fn show_about(&self) {
         let window = self.active_window().unwrap();
         let about = adw::AboutDialog::builder()
-            .application_name("Nowdothis")
+            .application_name("Now Do This")
             .application_icon("camp.pietro.NowDoThis")
             .developer_name("Pietro Campagnano")
             .version(VERSION)
