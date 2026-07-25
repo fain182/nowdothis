@@ -11,7 +11,8 @@
         <property name="child">
           <object class="AdwNavigationView" id="navigation_view">
 
-            <!-- Doing: the only thing on screen is the task at hand. -->
+            <!-- Doing: the only thing on screen is the task at hand. Declared
+                 first, so it is the root of the navigation stack. -->
             <child>
               <object class="AdwNavigationPage" id="focus_page">
                 <property name="title" translatable="yes">Now Do This</property>

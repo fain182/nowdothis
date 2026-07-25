@@ -125,11 +125,21 @@ mod imp {
                 move |_| window.present_add_dialog()
             ));
 
-            // The planning page sits on top of the stack as built; drop it so a
-            // returning user lands straight on the task at hand.
-            if !self.tasks.borrow().is_empty() {
+            // Landing on the planning page means the user is here to type.
+            self.plan_page.connect_showing(clone!(
+                #[weak]
+                window,
+                move |_| {
+                    window.imp().task_view.grab_focus();
+                }
+            ));
+
+            // Pages declared in the template are registered with the navigation
+            // view, not stacked: the focus page is the root, so an empty list
+            // has to push the planning page over it.
+            if self.tasks.borrow().is_empty() {
                 self.navigation_view.set_animate_transitions(false);
-                self.navigation_view.pop();
+                self.navigation_view.push(&self.plan_page.get());
                 self.navigation_view.set_animate_transitions(true);
             }
 
