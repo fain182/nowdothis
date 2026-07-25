@@ -3,29 +3,153 @@
   <requires lib="gtk" version="4.0"/>
   <requires lib="Adw" version="1.0"/>
   <template class="NowdothisWindow" parent="AdwApplicationWindow">
-    <property name="title" translatable="yes">Nowdothis</property>
-    <property name="default-width">800</property>
-    <property name="default-height">600</property>
+    <property name="title" translatable="yes">Now Do This</property>
+    <property name="default-width">560</property>
+    <property name="default-height">440</property>
     <property name="content">
-      <object class="AdwToolbarView">
-        <child type="top">
-          <object class="AdwHeaderBar">
-            <child type="end">
-              <object class="GtkMenuButton">
-                <property name="primary">True</property>
-                <property name="icon-name">open-menu-symbolic</property>
-                <property name="tooltip-text" translatable="yes">Main Menu</property>
-                <property name="menu-model">primary_menu</property>
+      <object class="AdwToastOverlay" id="toast_overlay">
+        <property name="child">
+          <object class="AdwNavigationView" id="navigation_view">
+
+            <!-- Doing: the only thing on screen is the task at hand. -->
+            <child>
+              <object class="AdwNavigationPage" id="focus_page">
+                <property name="title" translatable="yes">Now Do This</property>
+                <property name="tag">focus</property>
+                <property name="child">
+                  <object class="AdwToolbarView">
+                    <child type="top">
+                      <object class="AdwHeaderBar">
+                        <property name="show-title">False</property>
+                        <child type="start">
+                          <object class="GtkButton" id="edit_button">
+                            <property name="label" translatable="yes">Edit List</property>
+                          </object>
+                        </child>
+                        <child type="end">
+                          <object class="GtkMenuButton">
+                            <property name="primary">True</property>
+                            <property name="icon-name">open-menu-symbolic</property>
+                            <property name="tooltip-text" translatable="yes">Main Menu</property>
+                            <property name="menu-model">primary_menu</property>
+                          </object>
+                        </child>
+                        <child type="end">
+                          <object class="GtkButton" id="add_button">
+                            <property name="icon-name">list-add-symbolic</property>
+                            <property name="tooltip-text" translatable="yes">Add Task</property>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                    <property name="content">
+                      <object class="GtkScrolledWindow">
+                        <property name="hscrollbar-policy">never</property>
+                        <property name="vexpand">True</property>
+                        <property name="child">
+                          <object class="AdwClamp">
+                            <property name="maximum-size">560</property>
+                            <property name="child">
+                              <object class="GtkBox">
+                                <property name="orientation">vertical</property>
+                                <property name="valign">center</property>
+                                <property name="spacing">36</property>
+                                <property name="margin-top">24</property>
+                                <property name="margin-bottom">24</property>
+                                <property name="margin-start">24</property>
+                                <property name="margin-end">24</property>
+                                <child>
+                                  <object class="GtkLabel" id="task_label">
+                                    <property name="wrap">True</property>
+                                    <property name="wrap-mode">word-char</property>
+                                    <property name="justify">center</property>
+                                    <style>
+                                      <class name="title-1"/>
+                                    </style>
+                                  </object>
+                                </child>
+                                <child>
+                                  <object class="GtkButton" id="done_button">
+                                    <property name="label" translatable="yes">Done</property>
+                                    <property name="halign">center</property>
+                                    <style>
+                                      <class name="pill"/>
+                                      <class name="suggested-action"/>
+                                    </style>
+                                  </object>
+                                </child>
+                              </object>
+                            </property>
+                          </object>
+                        </property>
+                      </object>
+                    </property>
+                  </object>
+                </property>
               </object>
             </child>
-          </object>
-        </child>
-        <property name="content">
-          <object class="GtkLabel" id="label">
-            <property name="label" translatable="yes">Hello, World!</property>
-            <style>
-              <class name="title-1"/>
-            </style>
+
+            <!-- Planning: the whole list as free text, one task per line. -->
+            <child>
+              <object class="AdwNavigationPage" id="plan_page">
+                <property name="title" translatable="yes">Your List</property>
+                <property name="tag">plan</property>
+                <property name="child">
+                  <object class="AdwToolbarView">
+                    <child type="top">
+                      <object class="AdwHeaderBar"/>
+                    </child>
+                    <property name="content">
+                      <object class="GtkScrolledWindow">
+                        <property name="vexpand">True</property>
+                        <property name="child">
+                          <object class="AdwClamp">
+                            <property name="maximum-size">560</property>
+                            <property name="child">
+                              <object class="GtkOverlay">
+                                <property name="child">
+                                  <object class="GtkTextView" id="task_view">
+                                    <property name="wrap-mode">word-char</property>
+                                    <property name="top-margin">18</property>
+                                    <property name="bottom-margin">18</property>
+                                    <property name="left-margin">18</property>
+                                    <property name="right-margin">18</property>
+                                    <property name="accessible-role">text-box</property>
+                                    <accessibility>
+                                      <property name="label" translatable="yes">Task list, one task per line</property>
+                                    </accessibility>
+                                  </object>
+                                </property>
+                                <child type="overlay">
+                                  <object class="GtkLabel" id="placeholder">
+                                    <property name="can-target">False</property>
+                                    <property name="halign">start</property>
+                                    <property name="valign">start</property>
+                                    <property name="wrap">True</property>
+                                    <property name="wrap-mode">word-char</property>
+                                    <property name="xalign">0</property>
+                                    <property name="margin-top">18</property>
+                                    <property name="margin-start">20</property>
+                                    <property name="margin-end">20</property>
+                                    <property name="label" translatable="yes">Write one task per line.
+
+The first line is what you'll do next — the rest waits its turn.</property>
+                                    <style>
+                                      <class name="dim-label"/>
+                                    </style>
+                                  </object>
+                                </child>
+                              </object>
+                            </property>
+                          </object>
+                        </property>
+                      </object>
+                    </property>
+                  </object>
+                </property>
+              </object>
+            </child>
+
           </object>
         </property>
       </object>
@@ -34,15 +158,11 @@
   <menu id="primary_menu">
     <section>
       <item>
-        <attribute name="label" translatable="yes">_Preferences</attribute>
-        <attribute name="action">app.preferences</attribute>
-      </item>
-      <item>
         <attribute name="label" translatable="yes">_Keyboard Shortcuts</attribute>
         <attribute name="action">app.shortcuts</attribute>
       </item>
       <item>
-        <attribute name="label" translatable="yes">_About Nowdothis</attribute>
+        <attribute name="label" translatable="yes">_About Now Do This</attribute>
         <attribute name="action">app.about</attribute>
       </item>
     </section>

@@ -20,6 +20,8 @@
 
 mod application;
 mod config;
+mod models;
+mod services;
 mod window;
 
 use self::application::NowdothisApplication;

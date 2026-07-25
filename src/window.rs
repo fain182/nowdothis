@@ -18,19 +18,46 @@
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
-use gtk::prelude::*;
+use adw::prelude::*;
 use adw::subclass::prelude::*;
+use gettextrs::gettext;
+use gtk::glib::clone;
 use gtk::{gio, glib};
+
+use crate::models::task_list::TaskList;
+use crate::services::storage::Storage;
 
 mod imp {
     use super::*;
 
+    use std::cell::{Cell, OnceCell, RefCell};
+
     #[derive(Debug, Default, gtk::CompositeTemplate)]
     #[template(resource = "/camp/pietro/NowDoThis/window.ui")]
     pub struct NowdothisWindow {
-        // Template widgets
         #[template_child]
-        pub label: TemplateChild<gtk::Label>,
+        pub toast_overlay: TemplateChild<adw::ToastOverlay>,
+        #[template_child]
+        pub navigation_view: TemplateChild<adw::NavigationView>,
+        #[template_child]
+        pub plan_page: TemplateChild<adw::NavigationPage>,
+        #[template_child]
+        pub task_label: TemplateChild<gtk::Label>,
+        #[template_child]
+        pub task_view: TemplateChild<gtk::TextView>,
+        #[template_child]
+        pub placeholder: TemplateChild<gtk::Label>,
+        #[template_child]
+        pub done_button: TemplateChild<gtk::Button>,
+        #[template_child]
+        pub edit_button: TemplateChild<gtk::Button>,
+        #[template_child]
+        pub add_button: TemplateChild<gtk::Button>,
+
+        pub tasks: RefCell<TaskList>,
+        pub storage: OnceCell<Storage>,
+        /// Guards against reacting to buffer changes we made ourselves.
+        pub updating: Cell<bool>,
     }
 
     #[glib::object_subclass]
@@ -48,7 +75,68 @@ mod imp {
         }
     }
 
-    impl ObjectImpl for NowdothisWindow {}
+    impl ObjectImpl for NowdothisWindow {
+        fn constructed(&self) {
+            self.parent_constructed();
+
+            let window = self.obj().clone();
+
+            let storage = Storage::new();
+            let text = match storage.load() {
+                Ok(text) => text,
+                Err(error) => {
+                    glib::g_warning!("nowdothis", "Could not read the task list: {}", error);
+                    String::new()
+                }
+            };
+            self.storage
+                .set(storage)
+                .expect("storage is only set once, during construction");
+            *self.tasks.borrow_mut() = TaskList::from_text(&text);
+
+            self.updating.set(true);
+            self.task_view.buffer().set_text(&text);
+            self.updating.set(false);
+
+            self.task_view.buffer().connect_changed(clone!(
+                #[weak]
+                window,
+                move |buffer| window.on_list_edited(buffer)
+            ));
+
+            self.done_button.connect_clicked(clone!(
+                #[weak]
+                window,
+                move |_| window.complete_current_task()
+            ));
+
+            self.edit_button.connect_clicked(clone!(
+                #[weak]
+                window,
+                move |_| {
+                    let imp = window.imp();
+                    imp.navigation_view.push(&imp.plan_page.get());
+                }
+            ));
+
+            self.add_button.connect_clicked(clone!(
+                #[weak]
+                window,
+                move |_| window.present_add_dialog()
+            ));
+
+            // The planning page sits on top of the stack as built; drop it so a
+            // returning user lands straight on the task at hand.
+            if !self.tasks.borrow().is_empty() {
+                self.navigation_view.set_animate_transitions(false);
+                self.navigation_view.pop();
+                self.navigation_view.set_animate_transitions(true);
+            }
+
+            window.refresh();
+        }
+    }
+
     impl WidgetImpl for NowdothisWindow {}
     impl WindowImpl for NowdothisWindow {}
     impl ApplicationWindowImpl for NowdothisWindow {}
@@ -65,5 +153,114 @@ impl NowdothisWindow {
         glib::Object::builder()
             .property("application", application)
             .build()
+    }
+
+    fn refresh(&self) {
+        let imp = self.imp();
+        let tasks = imp.tasks.borrow();
+
+        imp.task_label.set_text(tasks.current().unwrap_or_default());
+        imp.placeholder
+            .set_visible(imp.task_view.buffer().char_count() == 0);
+        // With nothing to do, there is nothing to go back to.
+        imp.plan_page.set_can_pop(!tasks.is_empty());
+    }
+
+    fn on_list_edited(&self, buffer: &gtk::TextBuffer) {
+        if self.imp().updating.get() {
+            self.imp()
+                .placeholder
+                .set_visible(buffer.char_count() == 0);
+            return;
+        }
+
+        let text = buffer
+            .text(&buffer.start_iter(), &buffer.end_iter(), false)
+            .to_string();
+        *self.imp().tasks.borrow_mut() = TaskList::from_text(&text);
+        self.save(&text);
+        self.refresh();
+    }
+
+    fn complete_current_task(&self) {
+        let imp = self.imp();
+
+        imp.tasks.borrow_mut().complete_current();
+        let text = imp.tasks.borrow().to_text();
+        self.write_list(&text);
+
+        if imp.tasks.borrow().is_empty() {
+            imp.navigation_view.push(&imp.plan_page.get());
+        }
+        self.refresh();
+    }
+
+    fn add_task(&self, task: &str) {
+        let imp = self.imp();
+
+        imp.tasks.borrow_mut().append(task);
+        let text = imp.tasks.borrow().to_text();
+        self.write_list(&text);
+
+        imp.toast_overlay
+            .add_toast(adw::Toast::new(&gettext("Added to the end of the list")));
+        self.refresh();
+    }
+
+    fn present_add_dialog(&self) {
+        let entry = gtk::Entry::builder()
+            .placeholder_text(gettext("What came up?"))
+            .activates_default(true)
+            .build();
+
+        let dialog = adw::AlertDialog::new(Some(&gettext("Add Task")), None);
+        dialog.set_extra_child(Some(&entry));
+        dialog.add_response("cancel", &gettext("Cancel"));
+        dialog.add_response("add", &gettext("Add"));
+        dialog.set_response_appearance("add", adw::ResponseAppearance::Suggested);
+        dialog.set_default_response(Some("add"));
+        dialog.set_close_response("cancel");
+
+        let window = self.clone();
+        dialog.connect_response(
+            None,
+            clone!(
+                #[weak]
+                entry,
+                move |_, response| {
+                    if response == "add" {
+                        window.add_task(&entry.text());
+                    }
+                }
+            ),
+        );
+
+        dialog.present(Some(self));
+    }
+
+    /// Mirrors the list into the text view and onto disk, so the two never
+    /// disagree about what is left to do.
+    fn write_list(&self, text: &str) {
+        let imp = self.imp();
+
+        imp.updating.set(true);
+        imp.task_view.buffer().set_text(text);
+        imp.updating.set(false);
+
+        self.save(text);
+    }
+
+    fn save(&self, text: &str) {
+        let imp = self.imp();
+        let storage = imp
+            .storage
+            .get()
+            .expect("storage is set during construction");
+
+        if let Err(error) = storage.save(text) {
+            glib::g_warning!("nowdothis", "Could not save the task list: {}", error);
+            imp.toast_overlay
+                .add_toast(adw::Toast::new(&gettext("Could not save your list")));
+        }
     }
 }
