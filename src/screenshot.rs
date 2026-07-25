@@ -71,6 +71,22 @@ pub fn capture(window: &NowdothisWindow) {
 
         let window = window.clone();
         glib::timeout_add_local_once(std::time::Duration::from_millis(700), move || {
+            if std::env::var("NOWDOTHIS_TAB_ORDER").is_ok() {
+                for step in 1..=6 {
+                    window.child_focus(gtk::DirectionType::TabForward);
+                    let described = window.focus().map(|w| {
+                        let label = w
+                            .downcast_ref::<gtk::Button>()
+                            .and_then(|b| b.label())
+                            .map(|l| l.to_string())
+                            .or_else(|| w.tooltip_text().map(|t| t.to_string()))
+                            .unwrap_or_default();
+                        format!("{} \"{}\"", w.type_().name(), label)
+                    });
+                    println!("TAB {step}: {}", described.unwrap_or("nessuno".into()));
+                }
+            }
+
             let paintable = gtk::WidgetPaintable::new(Some(&window));
             let snapshot = gtk::Snapshot::new();
             paintable.snapshot(&snapshot, window.width() as f64, window.height() as f64);

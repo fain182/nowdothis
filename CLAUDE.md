@@ -37,6 +37,10 @@ variables yourself:
     XDG_DATA_HOME=/tmp/ndt NOWDOTHIS_SNAPSHOT=/tmp/shot.png \
         NOWDOTHIS_SNAPSHOT_PAGE=plan _build/screenshot/debug/nowdothis
 
+`NOWDOTHIS_SNAPSHOT_ACTION` fires an action first, for states that only appear
+on demand such as a dialog, and `NOWDOTHIS_TAB_ORDER=1` prints the focus chain,
+which is how keyboard reachability gets checked after a layout change.
+
 Pair it with `ADW_DEBUG_COLOR_SCHEME=prefer-dark` and
 `ADW_DEBUG_HIGH_CONTRAST=1`. Dark mode, high contrast and text scaling are all
 Circle criteria, and all three have caught real problems. Point
