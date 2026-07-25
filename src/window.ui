@@ -257,6 +257,14 @@
                     <child type="top">
                       <object class="AdwHeaderBar">
                         <child type="end">
+                          <object class="GtkMenuButton">
+                            <property name="primary">True</property>
+                            <property name="icon-name">open-menu-symbolic</property>
+                            <property name="tooltip-text" translatable="yes">Main Menu</property>
+                            <property name="menu-model">primary_menu</property>
+                          </object>
+                        </child>
+                        <child type="end">
                           <object class="GtkButton" id="start_button">
                             <property name="label" translatable="yes">Start</property>
                             <style>
