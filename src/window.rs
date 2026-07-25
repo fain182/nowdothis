@@ -52,6 +52,8 @@ mod imp {
         #[template_child]
         pub celebration_icon: TemplateChild<gtk::Image>,
         #[template_child]
+        pub celebration_message: TemplateChild<gtk::Label>,
+        #[template_child]
         pub edit_button: TemplateChild<gtk::Button>,
         #[template_child]
         pub add_button: TemplateChild<gtk::Button>,
@@ -189,6 +191,7 @@ impl NowdothisWindow {
         }
         imp.done_button.set_visible(!tasks.is_empty());
         imp.celebration_icon.set_visible(tasks.is_empty());
+        imp.celebration_message.set_visible(tasks.is_empty());
 
         imp.placeholder
             .set_visible(imp.task_view.buffer().char_count() == 0);

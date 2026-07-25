@@ -79,13 +79,31 @@
                                   </object>
                                 </child>
                                 <child>
-                                  <object class="GtkLabel" id="task_label">
-                                    <property name="wrap">True</property>
-                                    <property name="wrap-mode">word-char</property>
-                                    <property name="justify">center</property>
-                                    <style>
-                                      <class name="task"/>
-                                    </style>
+                                  <object class="GtkBox">
+                                    <property name="orientation">vertical</property>
+                                    <property name="spacing">8</property>
+                                    <child>
+                                      <object class="GtkLabel" id="task_label">
+                                        <property name="wrap">True</property>
+                                        <property name="wrap-mode">word-char</property>
+                                        <property name="justify">center</property>
+                                        <style>
+                                          <class name="task"/>
+                                        </style>
+                                      </object>
+                                    </child>
+                                    <child>
+                                      <object class="GtkLabel" id="celebration_message">
+                                        <property name="wrap">True</property>
+                                        <property name="wrap-mode">word-char</property>
+                                        <property name="justify">center</property>
+                                        <property name="label" translatable="yes">Time to relax</property>
+                                        <style>
+                                          <class name="dim-label"/>
+                                          <class name="task-list"/>
+                                        </style>
+                                      </object>
+                                    </child>
                                   </object>
                                 </child>
                                   </object>
