@@ -54,6 +54,8 @@ mod imp {
         #[template_child]
         pub action_stack: TemplateChild<gtk::Stack>,
         #[template_child]
+        pub focus_surface: TemplateChild<gtk::ScrolledWindow>,
+        #[template_child]
         pub task_view: TemplateChild<gtk::TextView>,
         #[template_child]
         pub placeholder: TemplateChild<gtk::Label>,
@@ -181,6 +183,16 @@ mod imp {
 
             window.setup_actions();
 
+            // A tint behind the text is the first thing someone asking for more
+            // contrast wants gone.
+            let style = adw::StyleManager::default();
+            style.connect_high_contrast_notify(clone!(
+                #[weak]
+                window,
+                move |style| window.set_vignette(!style.is_high_contrast())
+            ));
+            window.set_vignette(!style.is_high_contrast());
+
             // Pages declared in the template are registered with the navigation
             // view, not stacked: the focus page is the root, so an empty list
             // has to push the planning page over it.
@@ -225,6 +237,15 @@ impl NowdothisWindow {
     }
 
 
+
+    fn set_vignette(&self, wanted: bool) {
+        let surface = self.imp().focus_surface.get();
+        if wanted {
+            surface.add_css_class("focus-surface");
+        } else {
+            surface.remove_css_class("focus-surface");
+        }
+    }
 
     fn setup_actions(&self) {
         let advance = gio::ActionEntry::builder("advance")

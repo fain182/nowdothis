@@ -22,3 +22,13 @@
   padding-top: 14px;
   padding-bottom: 14px;
 }
+
+/* A vignette centred on the task, drawing the eye to it rather than decorating
+   the window. Built from the user's accent colour so it belongs to their
+   desktop. The class is removed altogether under high contrast, which is
+   handled in window.rs: the media query alone did not take effect here. */
+.focus-surface {
+  background-image: radial-gradient(circle at 50% 44%,
+                                    color-mix(in srgb, var(--accent-color) 9%, transparent) 0%,
+                                    transparent 58%);
+}
