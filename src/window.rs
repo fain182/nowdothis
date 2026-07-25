@@ -414,6 +414,9 @@ impl NowdothisWindow {
         );
 
         dialog.present(Some(self));
+        // The dialog hands focus to its default response, which would make a
+        // shortcut meant for typing require a click first.
+        entry.grab_focus();
     }
 
     /// Mirrors the list into the text view and onto disk, so the two never

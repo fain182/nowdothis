@@ -23,6 +23,8 @@ use crate::window::NowdothisWindow;
 /// - `NOWDOTHIS_SNAPSHOT_SIZE` — window size as `WIDTHxHEIGHT`.
 /// - `NOWDOTHIS_SNAPSHOT_PAGE` — `plan` or `focus`, to override which page an
 ///   empty or full list would otherwise open on.
+/// - `NOWDOTHIS_SNAPSHOT_ACTION` — an action to fire first, so states that only
+///   appear on demand, such as a dialog, can be captured.
 pub fn capture(window: &NowdothisWindow) {
     let Ok(path) = std::env::var("NOWDOTHIS_SNAPSHOT") else {
         return;
@@ -48,6 +50,10 @@ pub fn capture(window: &NowdothisWindow) {
         _ => {}
     }
     imp.navigation_view.set_animate_transitions(true);
+
+    if let Ok(action) = std::env::var("NOWDOTHIS_SNAPSHOT_ACTION") {
+        WidgetExt::activate_action(window, &action, None).expect("the action exists");
+    }
 
     let window = window.clone();
     glib::timeout_add_local_once(std::time::Duration::from_millis(900), move || {
