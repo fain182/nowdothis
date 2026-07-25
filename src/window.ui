@@ -32,7 +32,12 @@
                         </child>
                         <child type="end">
                           <object class="GtkButton" id="edit_button">
-                            <property name="label" translatable="yes">Edit List</property>
+                            <property name="child">
+                              <object class="AdwButtonContent">
+                                <property name="icon-name">document-edit-symbolic</property>
+                                <property name="label" translatable="yes">Edit List</property>
+                              </object>
+                            </property>
                             <style>
                               <class name="flat"/>
                             </style>
