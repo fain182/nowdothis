@@ -183,6 +183,20 @@ mod imp {
                 }
             ));
 
+            let wash = gtk::CssProvider::new();
+            wash.load_from_string(&window.wash_css());
+            gtk::style_context_add_provider_for_display(
+                &gtk::gdk::Display::default().expect("a display is open"),
+                &wash,
+                gtk::STYLE_PROVIDER_PRIORITY_APPLICATION,
+            );
+            // The accent can change while the app is open.
+            adw::StyleManager::default().connect_accent_color_notify(clone!(
+                #[weak]
+                window,
+                move |_| wash.load_from_string(&window.wash_css())
+            ));
+
             window.setup_actions();
 
             // A tint behind the text is the first thing someone asking for more
@@ -258,6 +272,32 @@ impl NowdothisWindow {
     }
 
 
+
+    /// The wash sits opposite the accent on the colour wheel, so the button in
+    /// the middle of it stands out instead of dissolving into it. The opposite
+    /// is picked from Adwaita's own palette rather than computed, so the colour
+    /// is always one the desktop already uses.
+    fn wash_css(&self) -> String {
+        let opposite = match adw::StyleManager::default().accent_color() {
+            adw::AccentColor::Blue => adw::AccentColor::Orange,
+            adw::AccentColor::Teal => adw::AccentColor::Red,
+            adw::AccentColor::Green => adw::AccentColor::Pink,
+            adw::AccentColor::Yellow => adw::AccentColor::Purple,
+            adw::AccentColor::Orange => adw::AccentColor::Blue,
+            adw::AccentColor::Red => adw::AccentColor::Teal,
+            adw::AccentColor::Pink => adw::AccentColor::Green,
+            adw::AccentColor::Purple => adw::AccentColor::Yellow,
+            _ => adw::AccentColor::Orange,
+        }
+        .to_rgba();
+
+        format!(
+            ":root {{ --wash-color: rgb({} {} {}); }}",
+            (opposite.red() * 255.0) as u8,
+            (opposite.green() * 255.0) as u8,
+            (opposite.blue() * 255.0) as u8,
+        )
+    }
 
     fn set_vignette(&self, wanted: bool) {
         let surface = self.imp().focus_surface.get();
