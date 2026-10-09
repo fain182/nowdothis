@@ -80,6 +80,17 @@ mod imp {
             // Ask the window manager/compositor to present the window
             window.present();
         }
+
+        // Quitting skips the windows' close request, which is where a pending
+        // history entry would otherwise be written.
+        fn shutdown(&self) {
+            for window in self.obj().windows() {
+                if let Ok(window) = window.downcast::<NowdothisWindow>() {
+                    window.record_history();
+                }
+            }
+            self.parent_shutdown();
+        }
     }
 
     impl GtkApplicationImpl for NowdothisApplication {}

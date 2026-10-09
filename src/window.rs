@@ -25,6 +25,7 @@ use gtk::glib::clone;
 use gtk::{gio, glib};
 
 use crate::models::task_list::TaskList;
+use crate::services::history::History;
 use crate::services::storage::Storage;
 
 mod imp {
@@ -74,6 +75,11 @@ mod imp {
 
         pub tasks: RefCell<TaskList>,
         pub storage: OnceCell<Storage>,
+        pub history: OnceCell<History>,
+        /// The list as the history last saw it, which the next entry is a
+        /// diff against.
+        pub recorded: RefCell<String>,
+        pub pending_record: RefCell<Option<glib::SourceId>>,
         /// Guards against reacting to buffer changes we made ourselves.
         pub updating: Cell<bool>,
     }
@@ -111,6 +117,10 @@ mod imp {
                 .set(storage)
                 .expect("storage is only set once, during construction");
             *self.tasks.borrow_mut() = TaskList::from_text(&text);
+            self.history
+                .set(History::new())
+                .expect("history is only set once, during construction");
+            *self.recorded.borrow_mut() = self.tasks.borrow().to_text();
 
             self.updating.set(true);
             self.task_view.buffer().set_text(&text);
@@ -170,6 +180,13 @@ mod imp {
                 }
             ));
 
+            // Leaving the planning page ends a burst of typing.
+            self.plan_page.connect_hiding(clone!(
+                #[weak]
+                window,
+                move |_| window.record_history()
+            ));
+
             // Landing on the task means the next thing wanted is Done, so put
             // the keyboard on it and let Enter carry the whole run.
             self.focus_page.connect_showing(clone!(
@@ -226,7 +243,12 @@ mod imp {
     }
 
     impl WidgetImpl for NowdothisWindow {}
-    impl WindowImpl for NowdothisWindow {}
+    impl WindowImpl for NowdothisWindow {
+        fn close_request(&self) -> glib::Propagation {
+            self.obj().record_history();
+            self.parent_close_request()
+        }
+    }
     impl ApplicationWindowImpl for NowdothisWindow {}
     impl AdwApplicationWindowImpl for NowdothisWindow {}
 }
@@ -413,6 +435,7 @@ impl NowdothisWindow {
             .to_string();
         *self.imp().tasks.borrow_mut() = TaskList::from_text(&text);
         self.save(&text);
+        self.schedule_record();
         self.refresh();
     }
 
@@ -486,6 +509,7 @@ impl NowdothisWindow {
         imp.updating.set(false);
 
         self.save(text);
+        self.record_history();
     }
 
     fn save(&self, text: &str) {
@@ -499,6 +523,52 @@ impl NowdothisWindow {
             glib::g_warning!("nowdothis", "Could not save the task list: {}", error);
             imp.toast_overlay
                 .add_toast(adw::Toast::new(&gettext("Could not save your list")));
+        }
+    }
+
+    /// Typing saves on every keystroke; the history waits for a pause so it
+    /// records words rather than letters.
+    fn schedule_record(&self) {
+        let imp = self.imp();
+        if let Some(source) = imp.pending_record.take() {
+            source.remove();
+        }
+
+        let source = glib::timeout_add_seconds_local_once(
+            2,
+            clone!(
+                #[weak(rename_to = window)]
+                self,
+                move || {
+                    // The source is gone once it has fired.
+                    window.imp().pending_record.take();
+                    window.record_history();
+                }
+            ),
+        );
+        imp.pending_record.replace(Some(source));
+    }
+
+    pub fn record_history(&self) {
+        let imp = self.imp();
+        if let Some(source) = imp.pending_record.take() {
+            source.remove();
+        }
+
+        let text = imp.tasks.borrow().to_text();
+        let history = imp
+            .history
+            .get()
+            .expect("history is set during construction");
+        let result = history.record(&imp.recorded.borrow(), &text);
+
+        match result {
+            Ok(()) => *imp.recorded.borrow_mut() = text,
+            Err(error) => {
+                glib::g_warning!("nowdothis", "Could not save the history: {}", error);
+                imp.toast_overlay
+                    .add_toast(adw::Toast::new(&gettext("Could not save the history")));
+            }
         }
     }
 }
