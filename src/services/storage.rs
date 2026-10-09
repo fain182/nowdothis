@@ -6,7 +6,7 @@
  */
 
 use std::fs;
-use std::io;
+use std::io::{self, Write};
 use std::path::PathBuf;
 
 use gtk::glib;
@@ -39,6 +39,13 @@ impl Storage {
         if let Some(directory) = self.path.parent() {
             fs::create_dir_all(directory)?;
         }
-        fs::write(&self.path, text)
+
+        // Written aside and renamed into place, so a crash mid-write leaves
+        // the previous list whole rather than a truncated file.
+        let partial = self.path.with_extension("txt.partial");
+        let mut file = fs::File::create(&partial)?;
+        file.write_all(text.as_bytes())?;
+        file.sync_all()?;
+        fs::rename(&partial, &self.path)
     }
 }
