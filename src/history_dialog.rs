@@ -12,15 +12,19 @@ use gtk::glib;
 use crate::models::history_log::{Change, Event, HistoryLog};
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
-enum PartOfDay {
+enum Section {
+    InitialList,
     Morning,
     Afternoon,
     Evening,
 }
 
-impl PartOfDay {
-    fn of(at: &glib::DateTime) -> Self {
-        match at.hour() {
+impl Section {
+    fn of(event: &Event) -> Self {
+        if event.change == Change::Initial {
+            return Self::InitialList;
+        }
+        match event.at.hour() {
             0..=11 => Self::Morning,
             12..=17 => Self::Afternoon,
             _ => Self::Evening,
@@ -29,6 +33,7 @@ impl PartOfDay {
 
     fn title(self) -> String {
         match self {
+            Self::InitialList => gettext("Initial List"),
             Self::Morning => gettext("Morning"),
             Self::Afternoon => gettext("Afternoon"),
             Self::Evening => gettext("Evening"),
@@ -43,7 +48,8 @@ pub fn build(log: &HistoryLog, now: &glib::DateTime) -> adw::Dialog {
     let view = adw::ToolbarView::new();
     view.add_top_bar(&header);
 
-    if log.events().is_empty() {
+    let events = log.without_moves();
+    if events.is_empty() {
         let status = adw::StatusPage::builder()
             .icon_name("document-open-recent-symbolic")
             .title(gettext("No History Yet"))
@@ -51,7 +57,7 @@ pub fn build(log: &HistoryLog, now: &glib::DateTime) -> adw::Dialog {
             .build();
         view.set_content(Some(&status));
     } else {
-        view.set_content(Some(&days(log, now)));
+        view.set_content(Some(&days(&events, now)));
     }
 
     adw::Dialog::builder()
@@ -62,7 +68,7 @@ pub fn build(log: &HistoryLog, now: &glib::DateTime) -> adw::Dialog {
         .build()
 }
 
-fn days(log: &HistoryLog, now: &glib::DateTime) -> gtk::ScrolledWindow {
+fn days(events: &[&Event], now: &glib::DateTime) -> gtk::ScrolledWindow {
     let content = gtk::Box::builder()
         .orientation(gtk::Orientation::Vertical)
         .spacing(18)
@@ -73,30 +79,30 @@ fn days(log: &HistoryLog, now: &glib::DateTime) -> gtk::ScrolledWindow {
         .build();
 
     let mut day = None;
-    let mut part = None;
+    let mut section = None;
     let mut group = adw::PreferencesGroup::new();
 
-    for event in log.events().iter().rev() {
+    for event in events.iter().rev() {
         let event_day = event.at.ymd();
         if day != Some(event_day) {
             day = Some(event_day);
-            part = None;
+            section = None;
             let heading = gtk::Label::builder()
                 .label(day_title(&event.at, now))
                 .xalign(0.0)
                 .wrap(true)
                 .margin_top(12)
                 .accessible_role(gtk::AccessibleRole::Heading)
-                .css_classes(["title-2"])
+                .css_classes(["title-4"])
                 .build();
             content.append(&heading);
         }
 
-        let event_part = PartOfDay::of(&event.at);
-        if part != Some(event_part) {
-            part = Some(event_part);
+        let event_section = Section::of(event);
+        if section != Some(event_section) {
+            section = Some(event_section);
             group = adw::PreferencesGroup::builder()
-                .title(event_part.title())
+                .title(event_section.title())
                 .build();
             content.append(&group);
         }
@@ -139,24 +145,38 @@ fn day_title(at: &glib::DateTime, now: &glib::DateTime) -> String {
 }
 
 fn row(event: &Event) -> adw::ActionRow {
-    let (icon, colour, kind, label) = match event.change {
-        Change::Added => ("list-add-symbolic", "accent", "added", gettext("Added")),
-        Change::Completed => ("object-select-symbolic", "success", "completed", gettext("Done")),
-        Change::Deleted => ("user-trash-symbolic", "error", "deleted", gettext("Deleted")),
+    // Only what was finished or lost is coloured: those are what a reader
+    // comes here to find.
+    let (icon, colours, label) = match event.change {
+        Change::Initial => ("view-list-bullet-symbolic", None, gettext("On the list")),
+        Change::Added => ("list-add-symbolic", None, gettext("Added")),
+        Change::Completed => (
+            "object-select-symbolic",
+            Some(("success", "completed")),
+            gettext("Done"),
+        ),
+        Change::Deleted => (
+            "user-trash-symbolic",
+            Some(("error", "deleted")),
+            gettext("Deleted"),
+        ),
     };
 
-    let image = gtk::Image::builder()
-        .icon_name(icon)
-        .css_classes([colour])
-        .build();
+    let image = gtk::Image::from_icon_name(icon);
     image.update_property(&[gtk::accessible::Property::Label(&label)]);
 
     let row = adw::ActionRow::builder()
         // Task text is the user's own, never markup.
         .use_markup(false)
         .title(&event.task)
-        .css_classes(["history", kind])
+        // So a deleted task can be copied back into the list.
+        .title_selectable(true)
         .build();
+    if let Some((icon_colour, tint)) = colours {
+        image.add_css_class(icon_colour);
+        row.add_css_class("history");
+        row.add_css_class(tint);
+    }
     row.add_prefix(&image);
     row
 }

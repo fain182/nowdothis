@@ -269,3 +269,11 @@ msgstr "Aggiunta"
 #: src/history_dialog.rs
 msgid "Deleted"
 msgstr "Cancellata"
+
+#: src/history_dialog.rs
+msgid "Initial List"
+msgstr "Lista iniziale"
+
+#: src/history_dialog.rs
+msgid "On the list"
+msgstr "Già nella lista"
