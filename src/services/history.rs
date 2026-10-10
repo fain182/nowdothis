@@ -29,7 +29,7 @@ impl History {
     /// if no task was added or removed.
     pub fn record(&self, before: &str, after: &str) -> io::Result<()> {
         let now = glib::DateTime::now_local()
-            .and_then(|now| now.format_iso8601())
+            .and_then(|now| now.format("%Y-%m-%dT%H:%M:%S%:z"))
             .map_err(io::Error::other)?;
         let Some(entry) = entry(before, after, &now) else {
             return Ok(());
