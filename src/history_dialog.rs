@@ -71,7 +71,7 @@ pub fn build(log: &HistoryLog, now: &glib::DateTime) -> adw::Dialog {
 fn days(events: &[&Event], now: &glib::DateTime) -> gtk::ScrolledWindow {
     let content = gtk::Box::builder()
         .orientation(gtk::Orientation::Vertical)
-        .spacing(18)
+        .spacing(6)
         .margin_top(12)
         .margin_bottom(24)
         .margin_start(12)
@@ -80,40 +80,63 @@ fn days(events: &[&Event], now: &glib::DateTime) -> gtk::ScrolledWindow {
 
     let mut day = None;
     let mut section = None;
-    let mut group = adw::PreferencesGroup::new();
+    let mut list = gtk::ListBox::new();
 
     for event in events.iter().rev() {
         let event_day = event.at.ymd();
         if day != Some(event_day) {
-            day = Some(event_day);
-            section = None;
             let heading = gtk::Label::builder()
                 .label(day_title(&event.at, now))
                 .xalign(0.0)
                 .wrap(true)
-                .margin_top(12)
                 .accessible_role(gtk::AccessibleRole::Heading)
                 .css_classes(["title-4"])
                 .build();
+            if day.is_some() {
+                heading.set_margin_top(12);
+            }
             content.append(&heading);
+
+            list = gtk::ListBox::builder()
+                .selection_mode(gtk::SelectionMode::None)
+                .css_classes(["boxed-list"])
+                .build();
+            content.append(&list);
+
+            day = Some(event_day);
+            section = None;
         }
 
         let event_section = Section::of(event);
         if section != Some(event_section) {
             section = Some(event_section);
-            group = adw::PreferencesGroup::builder()
-                .title(event_section.title())
-                .build();
-            content.append(&group);
+            list.append(&section_row(event_section));
         }
 
-        group.add(&row(event));
+        list.append(&row(event));
     }
 
     let clamp = adw::Clamp::builder().maximum_size(600).child(&content).build();
     gtk::ScrolledWindow::builder()
         .hscrollbar_policy(gtk::PolicyType::Never)
         .child(&clamp)
+        .build()
+}
+
+fn section_row(section: Section) -> gtk::ListBoxRow {
+    let label = gtk::Label::builder()
+        .label(section.title())
+        .xalign(0.0)
+        .wrap(true)
+        .accessible_role(gtk::AccessibleRole::Heading)
+        .css_classes(["caption-heading", "dim-label"])
+        .build();
+
+    gtk::ListBoxRow::builder()
+        .activatable(false)
+        .focusable(false)
+        .css_classes(["history-section"])
+        .child(&label)
         .build()
 }
 
@@ -144,7 +167,7 @@ fn day_title(at: &glib::DateTime, now: &glib::DateTime) -> String {
     }
 }
 
-fn row(event: &Event) -> adw::ActionRow {
+fn row(event: &Event) -> gtk::ListBoxRow {
     // Only what was finished or lost is coloured: those are what a reader
     // comes here to find.
     let (icon, colours, label) = match event.change {
@@ -165,18 +188,28 @@ fn row(event: &Event) -> adw::ActionRow {
     let image = gtk::Image::from_icon_name(icon);
     image.update_property(&[gtk::accessible::Property::Label(&label)]);
 
-    let row = adw::ActionRow::builder()
-        // Task text is the user's own, never markup.
-        .use_markup(false)
-        .title(&event.task)
+    let task = gtk::Label::builder()
+        .label(&event.task)
+        .xalign(0.0)
+        .hexpand(true)
+        .wrap(true)
+        .wrap_mode(gtk::pango::WrapMode::WordChar)
         // So a deleted task can be copied back into the list.
-        .title_selectable(true)
+        .selectable(true)
+        .build();
+
+    let content = gtk::Box::builder().spacing(12).build();
+    content.append(&image);
+    content.append(&task);
+
+    let row = gtk::ListBoxRow::builder()
+        .activatable(false)
+        .css_classes(["history-row"])
+        .child(&content)
         .build();
     if let Some((icon_colour, tint)) = colours {
         image.add_css_class(icon_colour);
-        row.add_css_class("history");
         row.add_css_class(tint);
     }
-    row.add_prefix(&image);
     row
 }

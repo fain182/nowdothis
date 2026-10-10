@@ -55,12 +55,27 @@
   padding-bottom: 8px;
 }
 
+/* The history is read, not operated: rows sit closer than Adwaita's
+   preference rows so a whole day fits without scrolling. */
+row.history-row {
+  padding: 8px 12px;
+}
+
+row.history-section {
+  padding: 10px 12px 2px 12px;
+}
+
+/* No line between a part of the day and the tasks under it. */
+.boxed-list > row.history-section {
+  border-bottom: none;
+}
+
 /* A faint tint of each change's colour, so a long day can be scanned for what
    got done; the icon carries the meaning, the tint only groups it. */
-row.history.completed {
+row.history-row.completed {
   background-color: color-mix(in srgb, var(--success-color) 10%, transparent);
 }
 
-row.history.deleted {
+row.history-row.deleted {
   background-color: color-mix(in srgb, var(--destructive-color) 10%, transparent);
 }
