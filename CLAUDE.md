@@ -65,3 +65,8 @@ showing an older version of the app reads as a bug.
 The task list is a plain text file, one task per line, at
 `$XDG_DATA_HOME/nowdothis/tasks.txt`. The list and its text form are the same
 thing, which is why there is no serialisation layer.
+
+Next to it, `history.txt` is only ever appended to: each entry is a timestamp
+followed by the tasks that left the list (`- `) and entered it (`+ `), so
+nothing typed into the list is ever lost. Typing is recorded after a two-second
+pause; every other change is recorded at once.
