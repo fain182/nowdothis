@@ -68,5 +68,6 @@ thing, which is why there is no serialisation layer.
 
 Next to it, `history.txt` is only ever appended to: each entry is a timestamp
 followed by the tasks that left the list (`- `) and entered it (`+ `), so
-nothing typed into the list is ever lost. Typing is recorded after a two-second
-pause; every other change is recorded at once.
+nothing typed into the list is ever lost. The first entry lists the whole list.
+Typing is recorded after a 30 second pause, or on closing; every other change is
+recorded at once.
