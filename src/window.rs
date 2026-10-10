@@ -450,8 +450,27 @@ impl NowdothisWindow {
     fn complete_current_task(&self) {
         let imp = self.imp();
 
+        // Pending typing goes in first, so the completion gets an entry of
+        // its own rather than being mixed into an edit.
+        self.record_history();
+
+        let task = imp.tasks.borrow().current().map(String::from);
         imp.tasks.borrow_mut().complete_current();
         let text = imp.tasks.borrow().to_text();
+
+        if let Some(task) = task {
+            let history = imp
+                .history
+                .get()
+                .expect("history is set during construction");
+            // On failure the recorded list stays as it was, so the next
+            // entry still keeps the task, as a deletion.
+            match history.record_completed(&task) {
+                Ok(()) => *imp.recorded.borrow_mut() = text.clone(),
+                Err(error) => self.report_history_error(&error),
+            }
+        }
+
         self.write_list(&text);
         self.refresh();
     }
@@ -572,12 +591,15 @@ impl NowdothisWindow {
 
         match result {
             Ok(()) => *imp.recorded.borrow_mut() = text,
-            Err(error) => {
-                glib::g_warning!("nowdothis", "Could not save the history: {}", error);
-                imp.toast_overlay
-                    .add_toast(adw::Toast::new(&gettext("Could not save the history")));
-            }
+            Err(error) => self.report_history_error(&error),
         }
+    }
+
+    fn report_history_error(&self, error: &std::io::Error) {
+        glib::g_warning!("nowdothis", "Could not save the history: {}", error);
+        self.imp()
+            .toast_overlay
+            .add_toast(adw::Toast::new(&gettext("Could not save the history")));
     }
 }
 

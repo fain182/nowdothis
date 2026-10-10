@@ -37,13 +37,18 @@ impl History {
     /// Appends what changed between two versions of the list; writes nothing
     /// if no task was added or removed.
     pub fn record(&self, before: &str, after: &str) -> io::Result<()> {
-        let now = glib::DateTime::now_local()
-            .and_then(|now| now.format("%Y-%m-%dT%H:%M:%S%:z"))
-            .map_err(io::Error::other)?;
-        let Some(entry) = entry(before, after, &now) else {
-            return Ok(());
-        };
+        match entry(before, after, &now()?) {
+            Some(entry) => self.append(&entry),
+            None => Ok(()),
+        }
+    }
 
+    /// Marks a task as done, which the history keeps apart from one deleted.
+    pub fn record_completed(&self, task: &str) -> io::Result<()> {
+        self.append(&completion(task, &now()?))
+    }
+
+    fn append(&self, entry: &str) -> io::Result<()> {
         if let Some(directory) = self.path.parent() {
             fs::create_dir_all(directory)?;
         }
@@ -54,6 +59,16 @@ impl History {
         file.write_all(entry.as_bytes())?;
         file.sync_data()
     }
+}
+
+fn now() -> io::Result<glib::GString> {
+    glib::DateTime::now_local()
+        .and_then(|now| now.format("%Y-%m-%dT%H:%M:%S%:z"))
+        .map_err(io::Error::other)
+}
+
+fn completion(task: &str, timestamp: &str) -> String {
+    format!("## {timestamp}\nx {task}\n")
 }
 
 /// Compares the lists as collections of lines: moving a task loses no text,
@@ -90,7 +105,7 @@ fn tasks(text: &str) -> impl Iterator<Item = &str> {
 
 #[cfg(test)]
 mod tests {
-    use super::entry;
+    use super::{completion, entry};
 
     const AT: &str = "2026-10-09T17:30:00+02";
 
@@ -125,6 +140,14 @@ mod tests {
         assert_eq!(
             entry("call Luca\n", "call Luca and Marta\n", AT).as_deref(),
             Some("## 2026-10-09T17:30:00+02\n- call Luca\n+ call Luca and Marta\n")
+        );
+    }
+
+    #[test]
+    fn a_completed_task_is_marked_with_an_x() {
+        assert_eq!(
+            completion("call Luca", AT),
+            "## 2026-10-09T17:30:00+02\nx call Luca\n"
         );
     }
 
