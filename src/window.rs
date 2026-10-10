@@ -24,6 +24,8 @@ use gettextrs::gettext;
 use gtk::glib::clone;
 use gtk::{gio, glib};
 
+use crate::history_dialog;
+use crate::models::history_log::HistoryLog;
 use crate::models::task_list::TaskList;
 use crate::services::history::History;
 use crate::services::storage::Storage;
@@ -345,8 +347,11 @@ impl NowdothisWindow {
         let add_task = gio::ActionEntry::builder("add-task")
             .activate(|window: &Self, _, _| window.present_add_dialog())
             .build();
+        let history = gio::ActionEntry::builder("history")
+            .activate(|window: &Self, _, _| window.present_history())
+            .build();
 
-        self.add_action_entries([advance, add_task]);
+        self.add_action_entries([advance, add_task, history]);
     }
 
     /// The same keystroke moves the day forward wherever you are: it starts the
@@ -593,6 +598,30 @@ impl NowdothisWindow {
             Ok(()) => *imp.recorded.borrow_mut() = text,
             Err(error) => self.report_history_error(&error),
         }
+    }
+
+    fn present_history(&self) {
+        // Typing still waiting for its pause belongs in what is shown.
+        self.record_history();
+
+        let history = self
+            .imp()
+            .history
+            .get()
+            .expect("history is set during construction");
+        let text = match history.read() {
+            Ok(text) => text,
+            Err(error) => {
+                glib::g_warning!("nowdothis", "Could not read the history: {}", error);
+                self.imp()
+                    .toast_overlay
+                    .add_toast(adw::Toast::new(&gettext("Could not read the history")));
+                return;
+            }
+        };
+        let now = glib::DateTime::now_local().expect("the local time is known");
+
+        history_dialog::build(&HistoryLog::from_text(&text), &now).present(Some(self));
     }
 
     fn report_history_error(&self, error: &std::io::Error) {

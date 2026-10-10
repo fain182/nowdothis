@@ -4,6 +4,7 @@ data/camp.pietro.NowDoThis.desktop.in
 data/camp.pietro.NowDoThis.gschema.xml
 data/camp.pietro.NowDoThis.metainfo.xml.in
 src/application.rs
+src/history_dialog.rs
 src/shortcuts-dialog.ui
 src/window.rs
 src/window.ui

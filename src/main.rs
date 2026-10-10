@@ -20,6 +20,7 @@
 
 mod application;
 mod config;
+mod history_dialog;
 mod models;
 #[cfg(feature = "screenshot")]
 mod screenshot;

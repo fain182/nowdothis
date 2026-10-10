@@ -211,3 +211,61 @@ msgstr "_Scorciatoie da tastiera"
 #: src/window.ui:345
 msgid "_About Now Do This"
 msgstr "_Informazioni su Now Do This"
+
+#: src/window.ui
+msgid "_History"
+msgstr "_Cronologia"
+
+#: src/window.rs
+msgid "Could not save the history"
+msgstr "Impossibile salvare la cronologia"
+
+#: src/window.rs
+msgid "Could not read the history"
+msgstr "Impossibile leggere la cronologia"
+
+#: src/history_dialog.rs
+msgid "History"
+msgstr "Cronologia"
+
+#: src/history_dialog.rs
+msgid "No History Yet"
+msgstr "Ancora nessuna cronologia"
+
+#: src/history_dialog.rs
+msgid "Tasks you add, finish or delete will show up here"
+msgstr "Le cose che aggiungi, fai o cancelli compariranno qui"
+
+#: src/history_dialog.rs
+msgid "Morning"
+msgstr "Mattina"
+
+#: src/history_dialog.rs
+msgid "Afternoon"
+msgstr "Pomeriggio"
+
+#: src/history_dialog.rs
+msgid "Evening"
+msgstr "Sera"
+
+#: src/history_dialog.rs
+msgid "Yesterday"
+msgstr "Ieri"
+
+#. Translators: a day in the history, as in "Wednesday 8 October".
+#: src/history_dialog.rs
+msgid "%A %-d %B"
+msgstr "%A %-d %B"
+
+#. Translators: a day in an earlier year, as in "Wednesday 8 October 2025".
+#: src/history_dialog.rs
+msgid "%A %-d %B %Y"
+msgstr "%A %-d %B %Y"
+
+#: src/history_dialog.rs
+msgid "Added"
+msgstr "Aggiunta"
+
+#: src/history_dialog.rs
+msgid "Deleted"
+msgstr "Cancellata"

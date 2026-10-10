@@ -25,6 +25,15 @@ impl History {
         }
     }
 
+    /// A missing file is an empty history: nothing has happened yet.
+    pub fn read(&self) -> io::Result<String> {
+        match fs::read_to_string(&self.path) {
+            Ok(text) => Ok(text),
+            Err(error) if error.kind() == io::ErrorKind::NotFound => Ok(String::new()),
+            Err(error) => Err(error),
+        }
+    }
+
     /// Records the whole list when there is no history yet, so tasks written
     /// before it existed can be recovered too.
     pub fn start(&self, text: &str) -> io::Result<()> {

@@ -54,3 +54,17 @@
   padding-top: 8px;
   padding-bottom: 8px;
 }
+
+/* A faint tint of each change's colour, so a long day can be scanned for what
+   got done; the icon carries the meaning, the tint only groups it. */
+row.history.added {
+  background-color: color-mix(in srgb, var(--accent-color) 10%, transparent);
+}
+
+row.history.completed {
+  background-color: color-mix(in srgb, var(--success-color) 10%, transparent);
+}
+
+row.history.deleted {
+  background-color: color-mix(in srgb, var(--destructive-color) 10%, transparent);
+}
