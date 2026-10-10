@@ -121,6 +121,14 @@ mod imp {
                 .set(History::new())
                 .expect("history is only set once, during construction");
             *self.recorded.borrow_mut() = self.tasks.borrow().to_text();
+            if let Err(error) = self
+                .history
+                .get()
+                .expect("history was set just above")
+                .start(&self.recorded.borrow())
+            {
+                glib::g_warning!("nowdothis", "Could not start the history: {}", error);
+            }
 
             self.updating.set(true);
             self.task_view.buffer().set_text(&text);
@@ -535,7 +543,7 @@ impl NowdothisWindow {
         }
 
         let source = glib::timeout_add_seconds_local_once(
-            2,
+            30,
             clone!(
                 #[weak(rename_to = window)]
                 self,

@@ -25,6 +25,15 @@ impl History {
         }
     }
 
+    /// Records the whole list when there is no history yet, so tasks written
+    /// before it existed can be recovered too.
+    pub fn start(&self, text: &str) -> io::Result<()> {
+        if self.path.exists() {
+            return Ok(());
+        }
+        self.record("", text)
+    }
+
     /// Appends what changed between two versions of the list; writes nothing
     /// if no task was added or removed.
     pub fn record(&self, before: &str, after: &str) -> io::Result<()> {
