@@ -126,6 +126,19 @@ impl Bot {
         .map(drop)
     }
 
+    pub async fn react(&self, chat_id: i64, message_id: i64, emoji: &str) -> Result<(), BotError> {
+        self.call(
+            "setMessageReaction",
+            json!({
+                "chat_id": chat_id,
+                "message_id": message_id,
+                "reaction": [{ "type": "emoji", "emoji": emoji }],
+            }),
+        )
+        .await
+        .map(drop)
+    }
+
     async fn call(&self, method: &str, parameters: Value) -> Result<Value, BotError> {
         let uri = format!("https://api.telegram.org/bot{}/{method}", self.token);
         // A token with characters a URI cannot hold is one Telegram would not

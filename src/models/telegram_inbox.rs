@@ -11,6 +11,7 @@ use serde_json::Value;
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Note {
     pub chat_id: i64,
+    pub message_id: i64,
     pub text: String,
 }
 
@@ -51,9 +52,14 @@ impl Inbox {
             if chat["type"].as_str() != Some("private") {
                 continue;
             }
-            if let (Some(chat_id), Some(text)) = (chat["id"].as_i64(), message["text"].as_str()) {
+            if let (Some(chat_id), Some(message_id), Some(text)) = (
+                chat["id"].as_i64(),
+                message["message_id"].as_i64(),
+                message["text"].as_str(),
+            ) {
                 inbox.notes.push(Note {
                     chat_id,
+                    message_id,
                     text: text.to_string(),
                 });
             }
@@ -77,7 +83,7 @@ mod tests {
         json!({
             "update_id": update_id,
             "message": {
-                "message_id": 1,
+                "message_id": update_id * 10,
                 "chat": { "id": chat_id, "type": "private" },
                 "date": 0,
                 "text": text
@@ -89,6 +95,7 @@ mod tests {
     fn each_line_of_a_message_is_a_task() {
         let note = Note {
             chat_id: 1,
+            message_id: 1,
             text: "buy bread\n\n  call Sam  \n".to_string(),
         };
         assert_eq!(note.tasks(), vec!["buy bread", "call Sam"]);
@@ -98,6 +105,7 @@ mod tests {
     fn commands_are_not_tasks() {
         let note = Note {
             chat_id: 1,
+            message_id: 1,
             text: "/start".to_string(),
         };
         assert!(note.tasks().is_empty());
@@ -112,6 +120,7 @@ mod tests {
         let texts: Vec<_> = inbox.notes.iter().map(|note| note.text.as_str()).collect();
         assert_eq!(texts, vec!["first", "second"]);
         assert_eq!(inbox.notes[0].chat_id, 42);
+        assert_eq!(inbox.notes[1].message_id, 80);
         assert_eq!(inbox.next_offset(), Some(9));
     }
 

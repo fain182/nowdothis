@@ -203,8 +203,13 @@ impl TelegramLink {
         }
 
         let tasks = note.tasks();
-        if !tasks.is_empty() {
-            (self.inner.on_tasks)(tasks);
+        if tasks.is_empty() {
+            return;
+        }
+        (self.inner.on_tasks)(tasks);
+        // The phone's only sign that the message arrived.
+        if let Err(error) = bot.react(note.chat_id, note.message_id, "👍").await {
+            glib::g_debug!("nowdothis", "Could not acknowledge the message: {}", error);
         }
     }
 
