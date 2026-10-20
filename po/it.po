@@ -333,8 +333,8 @@ msgstr ""
 "volte gli stessi task."
 
 #: src/window.ui
-msgid "_Telegram…"
-msgstr "_Telegram…"
+msgid "Add From _Phone…"
+msgstr "Aggiungi dal _telefono…"
 
 #: src/window.rs
 msgid "Added from Telegram"
