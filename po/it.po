@@ -353,19 +353,6 @@ msgid "Add Tasks From Your Phone"
 msgstr "Aggiungi task dal telefono"
 
 #: src/telegram_dialog.rs
-msgid ""
-"Make a Telegram bot of your own and anything you send it is added to the end "
-"of your list. The list stays pinned in the chat, so you can see it "
-"anywhere.\n"
-"\n"
-"Messages pass through Telegram, and are picked up while Now Do This is open."
-msgstr ""
-"Crea un tuo bot Telegram e tutto quello che gli mandi viene aggiunto in fondo "
-"alla tua lista. La lista resta fissata nella chat, così la vedi ovunque.\n"
-"\n"
-"I messaggi passano da Telegram e vengono raccolti mentre Now Do This è aperta."
-
-#: src/telegram_dialog.rs
 msgid "Get Started"
 msgstr "Inizia"
 
@@ -374,28 +361,8 @@ msgid "Create a Bot"
 msgstr "Crea un bot"
 
 #: src/telegram_dialog.rs
-msgid "Open @BotFather in Telegram"
-msgstr "Apri @BotFather in Telegram"
-
-#: src/telegram_dialog.rs
-msgid "Telegram's own bot for making bots"
-msgstr "Il bot di Telegram per creare bot"
-
-#: src/telegram_dialog.rs
-msgid "Send it /newbot"
-msgstr "Mandagli /newbot"
-
-#: src/telegram_dialog.rs
-msgid "Then choose a name and a username for your bot"
-msgstr "Poi scegli un nome e un nome utente per il tuo bot"
-
-#: src/telegram_dialog.rs
 msgid "Paste the token it gives you"
 msgstr "Incolla il token che ti dà"
-
-#: src/telegram_dialog.rs
-msgid "A long code such as 123456789:AAH…"
-msgstr "Un codice lungo come 123456789:AAH…"
 
 #: src/telegram_dialog.rs
 msgid "Token"
@@ -425,15 +392,6 @@ msgstr "Usa un altro bot"
 msgid "Say Hello"
 msgstr "Saluta il bot"
 
-#. Translators: {} is the bot's username, such as @my_tasks_bot.
-#: src/telegram_dialog.rs
-msgid ""
-"Send any message to @{}. The first chat to write to it is the only one it "
-"will listen to."
-msgstr ""
-"Manda un messaggio qualsiasi a @{}. La prima chat che gli scrive sarà "
-"l'unica che ascolterà."
-
 #: src/telegram_dialog.rs
 msgid "Disconnect"
 msgstr "Scollega"
@@ -444,21 +402,30 @@ msgid "Connected to @{}"
 msgstr "Collegato a @{}"
 
 #: src/telegram_dialog.rs
-msgid ""
-"Anything you send to the bot is added to the end of your list, one task per "
-"line. The list is pinned at the top of the chat."
-msgstr ""
-"Tutto quello che mandi al bot viene aggiunto in fondo alla tua lista, un task "
-"per riga. La lista è fissata in cima alla chat."
-
-#: src/telegram_dialog.rs
 msgid "Disconnect From Telegram?"
 msgstr "Scollegare Telegram?"
 
 #: src/telegram_dialog.rs
-msgid ""
-"Messages sent to the bot will no longer reach your list. Connecting again "
-"takes the bot's token, which @BotFather can show you."
-msgstr ""
-"I messaggi mandati al bot non arriveranno più alla tua lista. Per ricollegarlo "
-"serve il token del bot, che @BotFather può mostrarti."
+msgid "Send them to a Telegram bot of your own"
+msgstr "Mandali a un tuo bot Telegram"
+
+#: src/telegram_dialog.rs
+msgid "Open @BotFather"
+msgstr "Apri @BotFather"
+
+#: src/telegram_dialog.rs
+msgid "Send it /newbot and pick a name"
+msgstr "Mandagli /newbot e scegli un nome"
+
+#. Translators: {} is the bot's username, such as @my_tasks_bot.
+#: src/telegram_dialog.rs
+msgid "Send any message to @{}"
+msgstr "Manda un messaggio qualsiasi a @{}"
+
+#: src/telegram_dialog.rs
+msgid "Send it one task per line. They arrive while Now Do This is open."
+msgstr "Mandagli un task per riga. Arrivano mentre Now Do This è aperta."
+
+#: src/telegram_dialog.rs
+msgid "Messages sent to the bot will no longer reach your list"
+msgstr "I messaggi mandati al bot non arriveranno più alla tua lista"

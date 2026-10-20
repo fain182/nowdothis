@@ -19,8 +19,8 @@ pub fn build(link: &TelegramLink) -> adw::Dialog {
     let view = adw::NavigationView::new();
     let dialog = adw::Dialog::builder()
         .title(gettext("Telegram"))
-        .content_width(460)
-        .content_height(560)
+        .content_width(420)
+        .content_height(480)
         .child(&view)
         .build();
 
@@ -51,10 +51,9 @@ fn intro_page(dialog: &adw::Dialog, view: &adw::NavigationView, link: &TelegramL
     let status = adw::StatusPage::builder()
         .icon_name("phone-symbolic")
         .title(gettext("Add Tasks From Your Phone"))
-        .description(gettext(
-            "Make a Telegram bot of your own and anything you send it is added to the end of your list. The list stays pinned in the chat, so you can see it anywhere.\n\nMessages pass through Telegram, and are picked up while Now Do This is open.",
-        ))
+        .description(gettext("Send them to a Telegram bot of your own"))
         .child(&start)
+        .css_classes(["compact"])
         .build();
 
     page(&gettext("Telegram"), &status)
@@ -63,25 +62,13 @@ fn intro_page(dialog: &adw::Dialog, view: &adw::NavigationView, link: &TelegramL
 fn token_page(dialog: &adw::Dialog, view: &adw::NavigationView, link: &TelegramLink) -> adw::NavigationPage {
     let steps = adw::PreferencesGroup::new();
 
-    let botfather = step_row(
-        "1",
-        &gettext("Open @BotFather in Telegram"),
-        &gettext("Telegram's own bot for making bots"),
-    );
+    let botfather = step_row("1", &gettext("Open @BotFather"));
     botfather.set_activatable(true);
     botfather.add_suffix(&gtk::Image::from_icon_name("adw-external-link-symbolic"));
     botfather.connect_activated(|row| open(row, "https://t.me/BotFather"));
     steps.add(&botfather);
-    steps.add(&step_row(
-        "2",
-        &gettext("Send it /newbot"),
-        &gettext("Then choose a name and a username for your bot"),
-    ));
-    steps.add(&step_row(
-        "3",
-        &gettext("Paste the token it gives you"),
-        &gettext("A long code such as 123456789:AAH…"),
-    ));
+    steps.add(&step_row("2", &gettext("Send it /newbot and pick a name")));
+    steps.add(&step_row("3", &gettext("Paste the token it gives you")));
 
     let token = adw::PasswordEntryRow::builder()
         .title(gettext("Token"))
@@ -223,8 +210,9 @@ fn hello_page(dialog: &adw::Dialog, view: &adw::NavigationView, link: &TelegramL
         .paintable(&adw::SpinnerPaintable::new(None::<&gtk::Widget>))
         .title(gettext("Say Hello"))
         // Translators: {} is the bot's username, such as @my_tasks_bot.
-        .description(gettext("Send any message to @{}. The first chat to write to it is the only one it will listen to.").replace("{}", &name))
+        .description(gettext("Send any message to @{}").replace("{}", &name))
         .child(&buttons)
+        .css_classes(["compact"])
         .build();
     // The spinner only animates once it knows the widget it is drawn in.
     if let Some(paintable) = status.paintable().and_downcast::<adw::SpinnerPaintable>() {
@@ -302,9 +290,10 @@ fn connected_page(dialog: &adw::Dialog, link: &TelegramLink, just_now: bool) -> 
         // Translators: {} is the bot's username, such as @my_tasks_bot.
         .title(gettext("Connected to @{}").replace("{}", &name))
         .description(gettext(
-            "Anything you send to the bot is added to the end of your list, one task per line. The list is pinned at the top of the chat.",
+            "Send it one task per line. They arrive while Now Do This is open.",
         ))
         .child(&buttons)
+        .css_classes(["compact"])
         .build();
 
     page(&gettext("Telegram"), &status)
@@ -313,9 +302,7 @@ fn connected_page(dialog: &adw::Dialog, link: &TelegramLink, just_now: bool) -> 
 fn confirm_forget(dialog: &adw::Dialog, link: &TelegramLink) {
     let alert = adw::AlertDialog::new(
         Some(&gettext("Disconnect From Telegram?")),
-        Some(&gettext(
-            "Messages sent to the bot will no longer reach your list. Connecting again takes the bot's token, which @BotFather can show you.",
-        )),
+        Some(&gettext("Messages sent to the bot will no longer reach your list")),
     );
     alert.add_response("cancel", &gettext("Cancel"));
     alert.add_response("forget", &gettext("Disconnect"));
@@ -353,11 +340,8 @@ fn pill(label: &str, style: &str) -> gtk::Button {
         .build()
 }
 
-fn step_row(number: &str, title: &str, subtitle: &str) -> adw::ActionRow {
-    let row = adw::ActionRow::builder()
-        .title(title)
-        .subtitle(subtitle)
-        .build();
+fn step_row(number: &str, title: &str) -> adw::ActionRow {
+    let row = adw::ActionRow::builder().title(title).build();
     row.add_prefix(
         &gtk::Label::builder()
             .label(number)
