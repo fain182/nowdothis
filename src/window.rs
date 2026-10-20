@@ -25,11 +25,13 @@ use gtk::glib::clone;
 use gtk::{gio, glib};
 
 use crate::history_dialog;
+use crate::telegram_dialog;
 use crate::models::history_log::HistoryLog;
 use crate::models::sentence::as_sentence;
 use crate::models::task_list::TaskList;
 use crate::services::history::History;
 use crate::services::storage::Storage;
+use crate::services::telegram_link::TelegramLink;
 
 mod imp {
     use super::*;
@@ -79,6 +81,7 @@ mod imp {
         pub tasks: RefCell<TaskList>,
         pub storage: OnceCell<Storage>,
         pub history: OnceCell<History>,
+        pub telegram: OnceCell<TelegramLink>,
         /// The list as the history last saw it, which the next entry is a
         /// diff against.
         pub recorded: RefCell<String>,
@@ -137,6 +140,17 @@ mod imp {
             self.task_view.buffer().set_text(&text);
             self.updating.set(false);
 
+            let telegram = TelegramLink::new(clone!(
+                #[weak]
+                window,
+                move |tasks| window.add_tasks(&tasks, &gettext("Added from Telegram"))
+            ));
+            // Changes made while the app was closed reach the chat too.
+            telegram.mirror(&self.tasks.borrow());
+            telegram.start();
+            self.telegram
+                .set(telegram)
+                .expect("telegram is only set once, during construction");
 
             self.task_view.buffer().connect_changed(clone!(
                 #[weak]
@@ -323,8 +337,11 @@ impl NowdothisWindow {
         let history = gio::ActionEntry::builder("history")
             .activate(|window: &Self, _, _| window.present_history())
             .build();
+        let telegram = gio::ActionEntry::builder("telegram")
+            .activate(|window: &Self, _, _| window.present_telegram())
+            .build();
 
-        self.add_action_entries([advance, add_task, history]);
+        self.add_action_entries([advance, add_task, history, telegram]);
     }
 
     /// The same keystroke moves the day forward wherever you are: it starts the
@@ -454,19 +471,24 @@ impl NowdothisWindow {
     }
 
     fn add_task(&self, task: &str) {
+        self.add_tasks(&[task.to_string()], &gettext("Added to the end of the list"));
+    }
+
+    fn add_tasks(&self, tasks: &[String], toast: &str) {
         // Nothing was added, so nothing should be claimed.
-        if task.trim().is_empty() {
+        if tasks.iter().all(|task| task.trim().is_empty()) {
             return;
         }
 
         let imp = self.imp();
 
-        imp.tasks.borrow_mut().append(task);
+        for task in tasks {
+            imp.tasks.borrow_mut().append(task);
+        }
         let text = imp.tasks.borrow().to_text();
         self.write_list(&text);
 
-        imp.toast_overlay
-            .add_toast(adw::Toast::new(&gettext("Added to the end of the list")));
+        imp.toast_overlay.add_toast(adw::Toast::new(toast));
         self.refresh();
     }
 
@@ -528,6 +550,10 @@ impl NowdothisWindow {
             glib::g_warning!("nowdothis", "Could not save the task list: {}", error);
             imp.toast_overlay
                 .add_toast(adw::Toast::new(&gettext("Could not save your list")));
+        }
+
+        if let Some(telegram) = imp.telegram.get() {
+            telegram.mirror(&imp.tasks.borrow());
         }
     }
 
@@ -595,6 +621,15 @@ impl NowdothisWindow {
         let now = glib::DateTime::now_local().expect("the local time is known");
 
         history_dialog::build(&HistoryLog::from_text(&text), &now).present(Some(self));
+    }
+
+    fn present_telegram(&self) {
+        let telegram = self
+            .imp()
+            .telegram
+            .get()
+            .expect("telegram is set during construction");
+        telegram_dialog::build(telegram).present(Some(self));
     }
 
     fn report_history_error(&self, error: &std::io::Error) {

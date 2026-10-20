@@ -1,5 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <schemalist gettext-domain="nowdothis">
 	<schema id="camp.pietro.NowDoThis" path="/camp/pietro/NowDoThis/">
+		<key name="telegram-token" type="s">
+			<default>""</default>
+			<summary>Telegram bot token</summary>
+			<description>The token BotFather gave for the bot that tasks are sent to. Empty when Telegram is not set up.</description>
+		</key>
+		<key name="telegram-bot-name" type="s">
+			<default>""</default>
+			<summary>Telegram bot username</summary>
+			<description>The username of the bot, without the @, for linking to its chat.</description>
+		</key>
+		<key name="telegram-chat-id" type="x">
+			<default>0</default>
+			<summary>Telegram chat</summary>
+			<description>The one chat whose messages are added to the list. Zero until someone first writes to the bot.</description>
+		</key>
+		<key name="telegram-list-message-id" type="x">
+			<default>0</default>
+			<summary>Pinned list message</summary>
+			<description>The message in the chat that shows the list. Zero until it has been sent.</description>
+		</key>
+		<key name="telegram-offset" type="x">
+			<default>0</default>
+			<summary>Next Telegram update</summary>
+			<description>The first update not yet read, so a restart does not add the same tasks twice.</description>
+		</key>
 	</schema>
 </schemalist>

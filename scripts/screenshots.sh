@@ -19,6 +19,9 @@ mkdir -p "$work/nowdothis"
 # binary needs; the feature build then reuses them.
 "$root/scripts/build.sh" >/dev/null
 
+# The schema is installed under the prefix, where GSettings does not look.
+export GSETTINGS_SCHEMA_DIR="$root/_install/share/glib-2.0/schemas"
+
 cargo build \
     --features screenshot \
     --manifest-path "$root/Cargo.toml" \

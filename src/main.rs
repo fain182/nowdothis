@@ -25,6 +25,7 @@ mod models;
 #[cfg(feature = "screenshot")]
 mod screenshot;
 mod services;
+mod telegram_dialog;
 mod window;
 
 use self::application::NowdothisApplication;

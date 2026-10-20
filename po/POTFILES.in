@@ -5,6 +5,8 @@ data/camp.pietro.NowDoThis.gschema.xml
 data/camp.pietro.NowDoThis.metainfo.xml.in
 src/application.rs
 src/history_dialog.rs
+src/services/telegram_link.rs
 src/shortcuts-dialog.ui
+src/telegram_dialog.rs
 src/window.rs
 src/window.ui

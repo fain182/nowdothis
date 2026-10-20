@@ -40,6 +40,10 @@ impl TaskList {
         self.tasks.first().map(String::as_str)
     }
 
+    pub fn iter(&self) -> impl Iterator<Item = &str> {
+        self.tasks.iter().map(String::as_str)
+    }
+
     pub fn is_empty(&self) -> bool {
         self.tasks.is_empty()
     }

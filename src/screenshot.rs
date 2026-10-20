@@ -84,6 +84,14 @@ pub fn capture(window: &NowdothisWindow) {
                         .set_text("post the parcel");
                     alert.emit_by_name::<()>("response", &[&"add"]);
                 }
+            } else if action == "telegram-token" {
+                // The token page is only reached by a click.
+                WidgetExt::activate_action(&window, "win.telegram", None)
+                    .expect("the action exists");
+                let dialog = window.visible_dialog().expect("the dialog is open");
+                button_labelled(dialog.upcast_ref(), "Get Started")
+                    .expect("the intro page offers to start")
+                    .emit_clicked();
             } else {
                 match action.strip_prefix("app.") {
                     Some(name) => window
@@ -140,4 +148,21 @@ pub fn capture(window: &NowdothisWindow) {
             window.close();
         });
     });
+}
+
+fn button_labelled(widget: &gtk::Widget, label: &str) -> Option<gtk::Button> {
+    if let Some(button) = widget.downcast_ref::<gtk::Button>() {
+        if button.label().as_deref() == Some(label) {
+            return Some(button.clone());
+        }
+    }
+
+    let mut child = widget.first_child();
+    while let Some(current) = child {
+        if let Some(button) = button_labelled(&current, label) {
+            return Some(button);
+        }
+        child = current.next_sibling();
+    }
+    None
 }
