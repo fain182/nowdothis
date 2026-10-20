@@ -71,3 +71,21 @@ followed by the tasks that were done (`x `), deleted (`- `) or added (`+ `), so
 nothing typed into the list is ever lost. The first entry lists the whole list.
 Typing is recorded after a 30 second pause, or on closing; every other change is
 recorded at once.
+
+## Telegram
+
+Optional, off until set up from the menu. Each user makes a bot of their own
+with BotFather, because getUpdates is one queue per bot: a shared bot would
+need a server to sort messages by user, which is the cloud this avoids.
+
+- The token, the paired chat, the pinned message and the update offset live in
+  GSettings, in plain text. Chosen over the keyring for simplicity: whoever
+  holds the token can read what is sent to the bot and nothing else, and
+  BotFather can revoke it.
+- The first private chat to write to the bot is paired; any other is ignored.
+- Polling runs only while the app is open. Telegram keeps unread messages for
+  24 hours, so tasks sent while the computer is off longer than that are lost.
+- To look at the dialog without a real bot, run the screenshot build with
+  `GSETTINGS_BACKEND=keyfile` and a scratch `XDG_CONFIG_HOME` holding
+  `glib-2.0/settings/keyfile`; `NOWDOTHIS_SNAPSHOT_ACTION=telegram-token`
+  opens it on the token page.
