@@ -33,6 +33,10 @@ pub fn pinned_text(tasks: &TaskList, title: &str, empty: &str) -> String {
         }
         text.push_str(&line);
         text.push('\n');
+        // The task at hand stands apart from what comes after it.
+        if index == 0 {
+            text.push('\n');
+        }
     }
 
     text.trim_end_matches('\n').to_string()
@@ -54,8 +58,14 @@ mod tests {
         let tasks = TaskList::from_text("walk the dog\ncall Mum?\n");
         assert_eq!(
             pinned_text(&tasks, "Today", "none"),
-            "<b>📋 Today</b>\n\n👉 Walk the dog.\n• Call Mum?"
+            "<b>📋 Today</b>\n\n👉 Walk the dog.\n\n• Call Mum?"
         );
+    }
+
+    #[test]
+    fn a_single_task_has_nothing_after_it() {
+        let tasks = TaskList::from_text("walk the dog\n");
+        assert_eq!(pinned_text(&tasks, "Today", "none"), "<b>📋 Today</b>\n\n👉 Walk the dog.");
     }
 
     #[test]
