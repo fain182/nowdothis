@@ -341,8 +341,27 @@ msgid "Added from Telegram"
 msgstr "Aggiunto da Telegram"
 
 #: src/services/telegram_link.rs
-msgid "Connected. Anything you send here is added to the end of your list."
-msgstr "Collegato. Tutto quello che mandi qui viene aggiunto in fondo alla tua lista."
+msgid "Today's List"
+msgstr "La lista di oggi"
+
+#: src/services/telegram_link.rs
+msgid "Welcome to Now Do This"
+msgstr "Benvenuto in Now Do This"
+
+#: src/services/telegram_link.rs
+msgid ""
+"Send me anything you need to do, one task per line, and it goes to the end "
+"of your list."
+msgstr ""
+"Scrivimi le cose da fare, una per riga, e finiscono in fondo alla tua lista."
+
+#: src/services/telegram_link.rs
+msgid "Your list stays pinned at the top of this chat."
+msgstr "La tua lista resta fissata in cima a questa chat."
+
+#: src/services/telegram_link.rs
+msgid "A thumbs up means it arrived."
+msgstr "Un pollice in su vuol dire che è arrivato."
 
 #: src/telegram_dialog.rs
 msgid "Telegram"

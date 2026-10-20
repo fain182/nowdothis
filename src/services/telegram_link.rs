@@ -12,7 +12,7 @@ use gettextrs::gettext;
 use gtk::prelude::*;
 use gtk::{gio, glib};
 
-use crate::models::pinned_list::pinned_text;
+use crate::models::pinned_list::{escaped, pinned_text};
 use crate::models::task_list::TaskList;
 use crate::models::telegram_inbox::Note;
 use crate::services::telegram::Bot;
@@ -142,7 +142,11 @@ impl TelegramLink {
     pub fn mirror(&self, tasks: &TaskList) {
         self.inner
             .wanted
-            .replace(pinned_text(tasks, &gettext("Nothing left to do")));
+            .replace(pinned_text(
+                tasks,
+                &gettext("Today's List"),
+                &gettext("Nothing left to do"),
+            ));
 
         if let Some(source) = self.inner.pending_mirror.take() {
             source.remove();
@@ -190,8 +194,7 @@ impl TelegramLink {
                 .settings
                 .set_int64("telegram-chat-id", note.chat_id)
                 .expect("the key exists");
-            let welcome = gettext("Connected. Anything you send here is added to the end of your list.");
-            if let Err(error) = bot.send(note.chat_id, &welcome).await {
+            if let Err(error) = bot.send(note.chat_id, &welcome()).await {
                 glib::g_warning!("nowdothis", "Could not greet the Telegram chat: {}", error);
             }
             self.mirror_now();
@@ -281,4 +284,14 @@ impl TelegramLink {
     fn chat_id(&self) -> i64 {
         self.inner.settings.int64("telegram-chat-id")
     }
+}
+
+fn welcome() -> String {
+    format!(
+        "<b>👋 {}</b>\n\n✍️ {}\n📌 {}\n👍 {}",
+        escaped(&gettext("Welcome to Now Do This")),
+        escaped(&gettext("Send me anything you need to do, one task per line, and it goes to the end of your list.")),
+        escaped(&gettext("Your list stays pinned at the top of this chat.")),
+        escaped(&gettext("A thumbs up means it arrived.")),
+    )
 }

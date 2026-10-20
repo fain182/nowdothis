@@ -11,18 +11,22 @@ use crate::models::task_list::TaskList;
 /// Telegram refuses longer messages.
 const LIMIT: usize = 4096;
 
-/// The list as it reads in the pinned Telegram message, one sentence per line
-/// in the order they will be done. `empty` stands in for an empty list,
-/// because Telegram refuses an empty message.
-pub fn pinned_text(tasks: &TaskList, empty: &str) -> String {
+/// The list as it reads in the pinned Telegram message, in Telegram's HTML:
+/// a bold title, so the pin is recognisable at a glance, then one sentence per
+/// line with the current task pointed at. `empty` stands in for an empty list.
+pub fn pinned_text(tasks: &TaskList, title: &str, empty: &str) -> String {
+    let mut text = format!("<b>📋 {}</b>\n\n", escaped(title));
+
     if tasks.is_empty() {
-        return empty.to_string();
+        text.push_str(&format!("🎉 {}", escaped(empty)));
+        return text;
     }
 
-    let mut text = String::new();
-    for task in tasks.iter() {
-        let line = as_sentence(task);
+    for (index, task) in tasks.iter().enumerate() {
+        let marker = if index == 0 { "👉" } else { "•" };
+        let line = format!("{marker} {}", escaped(&as_sentence(task)));
         // Whole lines are dropped rather than cut, and the ellipsis says so.
+        // Counting the markup as well keeps this on the safe side.
         if text.chars().count() + line.chars().count() + 2 > LIMIT {
             text.push('…');
             break;
@@ -34,25 +38,44 @@ pub fn pinned_text(tasks: &TaskList, empty: &str) -> String {
     text.trim_end_matches('\n').to_string()
 }
 
+/// Telegram's HTML only needs these three escaped outside tags.
+pub fn escaped(text: &str) -> String {
+    text.replace('&', "&amp;")
+        .replace('<', "&lt;")
+        .replace('>', "&gt;")
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
 
     #[test]
-    fn tasks_read_as_sentences_in_order() {
+    fn the_current_task_is_pointed_at() {
         let tasks = TaskList::from_text("walk the dog\ncall Mum?\n");
-        assert_eq!(pinned_text(&tasks, "none"), "Walk the dog.\nCall Mum?");
+        assert_eq!(
+            pinned_text(&tasks, "Today", "none"),
+            "<b>📋 Today</b>\n\n👉 Walk the dog.\n• Call Mum?"
+        );
     }
 
     #[test]
-    fn an_empty_list_is_still_a_message() {
-        assert_eq!(pinned_text(&TaskList::default(), "none"), "none");
+    fn an_empty_list_still_has_its_title() {
+        assert_eq!(
+            pinned_text(&TaskList::default(), "Today", "none"),
+            "<b>📋 Today</b>\n\n🎉 none"
+        );
+    }
+
+    #[test]
+    fn tasks_cannot_inject_markup() {
+        let tasks = TaskList::from_text("compare <b> & <i>\n");
+        assert!(pinned_text(&tasks, "Today", "none").ends_with("👉 Compare &lt;b&gt; &amp; &lt;i&gt;"));
     }
 
     #[test]
     fn a_long_list_fits_in_one_message() {
         let tasks = TaskList::from_text(&"a task of some length\n".repeat(400));
-        let text = pinned_text(&tasks, "none");
+        let text = pinned_text(&tasks, "Today", "none");
         assert!(text.chars().count() <= LIMIT);
         assert!(text.ends_with('…'));
     }

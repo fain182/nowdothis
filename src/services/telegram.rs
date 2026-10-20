@@ -96,18 +96,27 @@ impl Bot {
         Ok(Inbox::from_updates(&updates))
     }
 
-    /// Returns the id of the message sent.
+    /// `text` is in Telegram's HTML. Returns the id of the message sent.
     pub async fn send(&self, chat_id: i64, text: &str) -> Result<i64, BotError> {
         let message = self
-            .call("sendMessage", json!({ "chat_id": chat_id, "text": text }))
+            .call(
+                "sendMessage",
+                json!({ "chat_id": chat_id, "text": text, "parse_mode": "HTML" }),
+            )
             .await?;
         Ok(message["message_id"].as_i64().unwrap_or_default())
     }
 
+    /// `text` is in Telegram's HTML.
     pub async fn edit(&self, chat_id: i64, message_id: i64, text: &str) -> Result<(), BotError> {
         self.call(
             "editMessageText",
-            json!({ "chat_id": chat_id, "message_id": message_id, "text": text }),
+            json!({
+                "chat_id": chat_id,
+                "message_id": message_id,
+                "text": text,
+                "parse_mode": "HTML",
+            }),
         )
         .await
         .map(drop)
