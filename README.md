@@ -18,7 +18,7 @@ and a button to say you have finished it.
 
 Type the day out, one task per line, and press Start. Each task fills the
 screen on its own until you mark it done, and the next one rises into its
-place.
+place. To change the order, drag a task by the handle at its left.
 
 If something comes up while you are working, add it without leaving the task
 at hand: it goes to the end of the list, so it never changes what you are
@@ -41,6 +41,17 @@ The whole day can be run without reaching for the mouse.
 
 <kbd>Enter</kbd> is left alone while you are writing the list, where it
 separates one task from the next.
+
+## From your phone
+
+Tasks that come up away from the computer can be sent from Telegram. Choose
+Add From Phone in the menu and it walks you through making a bot of your own
+with BotFather. From then on each line you send the bot goes to the end of the
+list, and a pinned message in the chat keeps the list in step.
+
+The bot is yours alone, and there is no server in between: the app asks
+Telegram for new messages only while it is open. Telegram keeps them for 24
+hours, so anything sent while the app is closed for longer is lost.
 
 ## Installing
 
@@ -71,6 +82,9 @@ the Flatpak sandbox.
 One task per line, at `~/.local/share/nowdothis/tasks.txt`. Read it, edit it
 or back it up with anything you like — there is no database and no format to
 learn.
+
+Next to it, `history.txt` records every task added, done or deleted, so
+nothing you type is ever lost. History in the menu shows it, newest first.
 
 ## Credit
 
