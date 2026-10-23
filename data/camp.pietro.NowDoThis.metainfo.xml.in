@@ -20,6 +20,11 @@
       Something that comes up while you are working can be added without leaving
       the task at hand, and whatever you do not finish is still waiting tomorrow.
     </p>
+    <p>
+      Tasks can also be sent from your phone through a Telegram bot of your own,
+      and a history keeps every task added, done or deleted, so nothing you type
+      is ever lost.
+    </p>
   </description>
 
   <developer id="camp.pietro">
@@ -51,6 +56,10 @@
     <screenshot>
       <image>https://raw.githubusercontent.com/fain182/nowdothis/main/data/screenshots/all-done.png</image>
       <caption>Nothing left to do</caption>
+    </screenshot>
+    <screenshot>
+      <image>https://raw.githubusercontent.com/fain182/nowdothis/main/data/screenshots/history.png</image>
+      <caption>Every task added, done or deleted</caption>
     </screenshot>
   </screenshots>
 

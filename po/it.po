@@ -58,24 +58,37 @@ msgid ""
 msgstr "Quello che salta fuori mentre lavori si può aggiungere senza lasciare la cosa che hai per le mani, e ciò che non finisci ti aspetta domani."
 
 
-#: data/camp.pietro.NowDoThis.metainfo.xml.in:26
+#: data/camp.pietro.NowDoThis.metainfo.xml.in:23
+msgid ""
+"Tasks can also be sent from your phone through a Telegram bot of your own, "
+"and a history keeps every task added, done or deleted, so nothing you type "
+"is ever lost."
+msgstr "Le cose da fare si possono anche mandare dal telefono, tramite un bot Telegram tutto tuo, e una cronologia tiene ogni cosa aggiunta, fatta o eliminata, così niente di ciò che scrivi va mai perso."
+
+
+#: data/camp.pietro.NowDoThis.metainfo.xml.in:31
 msgid "Pietro Campagnano"
 msgstr "Pietro Campagnano"
 
 
-#: data/camp.pietro.NowDoThis.metainfo.xml.in:45
+#: data/camp.pietro.NowDoThis.metainfo.xml.in:50
 msgid "One task at a time, with nothing else on screen"
 msgstr "Una cosa alla volta, e nient'altro sullo schermo"
 
 
-#: data/camp.pietro.NowDoThis.metainfo.xml.in:49
+#: data/camp.pietro.NowDoThis.metainfo.xml.in:54
 msgid "The day written out, one task per line"
 msgstr "La giornata scritta, una cosa per riga"
 
 
-#: data/camp.pietro.NowDoThis.metainfo.xml.in:53
+#: data/camp.pietro.NowDoThis.metainfo.xml.in:58
 msgid "Nothing left to do"
 msgstr "Non è rimasto nulla da fare"
+
+
+#: data/camp.pietro.NowDoThis.metainfo.xml.in:62
+msgid "Every task added, done or deleted"
+msgstr "Ogni cosa aggiunta, fatta o eliminata"
 
 
 #. Translators: Replace "translator-credits" with your name/username, and optionally an email or URL.
