@@ -51,7 +51,38 @@ echo "Writing to $out"
 
 tasks "reply to Sam's email" "walk the dog" "pick up milk"
 shoot doing ""
+
+# Without the final newline the cursor ends on the last task rather than on an
+# empty line, so the handle for moving it shows.
+printf '%s' "$(cat "$work/nowdothis/tasks.txt")" > "$work/nowdothis/tasks.txt"
 shoot planning plan
+
+# Relative to now, so the dialog reads Today and Yesterday.
+at() {
+    date -d "$1" +%Y-%m-%dT%H:%M:%S%:z
+}
+cat > "$work/nowdothis/history.txt" <<EOF
+## $(at 'yesterday 08:50')
++ book the dentist
++ water the plants
++ finish the report
+## $(at 'yesterday 10:15')
+x book the dentist
+## $(at 'yesterday 14:30')
++ call the bank
+## $(at 'yesterday 16:05')
+x finish the report
+## $(at 'yesterday 19:40')
+x water the plants
+## $(at 'today 08:55')
++ reply to Sam's email
++ walk the dog
+## $(at 'today 09:30')
+- call the bank
+## $(at 'today 09:45')
++ pick up milk
+EOF
+(export NOWDOTHIS_SNAPSHOT_ACTION=win.history; shoot history focus)
 
 rm -f "$work/nowdothis/tasks.txt"
 shoot all-done focus

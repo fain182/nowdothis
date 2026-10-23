@@ -145,6 +145,10 @@ pub fn capture(window: &NowdothisWindow) {
                 _ => eprintln!("nothing to render: is the window mapped?"),
             }
 
+            // Closing the window with a dialog open closes only the dialog.
+            if let Some(dialog) = window.visible_dialog() {
+                dialog.force_close();
+            }
             window.close();
         });
     });
