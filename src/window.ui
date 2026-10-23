@@ -337,11 +337,13 @@
                                     <property name="pixels-inside-wrap">0</property>
                                     <!-- Hanging indent: a continuation line sits
                                          further right than the line that starts
-                                         a task. -->
+                                         a task. The gutter holding the drag
+                                         handle takes the place of a left
+                                         margin. -->
                                     <property name="indent">-20</property>
                                     <property name="top-margin">28</property>
                                     <property name="bottom-margin">28</property>
-                                    <property name="left-margin">48</property>
+                                    <property name="left-margin">0</property>
                                     <property name="right-margin">28</property>
                                     <style>
                                       <class name="task-list"/>

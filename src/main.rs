@@ -25,6 +25,7 @@ mod models;
 #[cfg(feature = "screenshot")]
 mod screenshot;
 mod services;
+mod task_gutter;
 mod telegram_dialog;
 mod window;
 

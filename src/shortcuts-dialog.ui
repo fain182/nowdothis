@@ -18,6 +18,18 @@
         </child>
         <child>
           <object class="AdwShortcutsItem">
+            <property name="title" translatable="yes" context="shortcut window">Move Task Up</property>
+            <property name="accelerator">&lt;Alt&gt;Up</property>
+          </object>
+        </child>
+        <child>
+          <object class="AdwShortcutsItem">
+            <property name="title" translatable="yes" context="shortcut window">Move Task Down</property>
+            <property name="accelerator">&lt;Alt&gt;Down</property>
+          </object>
+        </child>
+        <child>
+          <object class="AdwShortcutsItem">
             <property name="title" translatable="yes" context="shortcut window">Show Shortcuts</property>
             <property name="action-name">app.shortcuts</property>
           </object>

@@ -103,14 +103,31 @@ msgstr "Aggiungi una cosa da fare"
 
 #: src/shortcuts-dialog.ui:21
 msgctxt "shortcut window"
-msgid "Show Shortcuts"
-msgstr "Mostra le scorciatoie"
+msgid "Move Task Up"
+msgstr "Sposta in alto"
 
 
 #: src/shortcuts-dialog.ui:27
 msgctxt "shortcut window"
+msgid "Move Task Down"
+msgstr "Sposta in basso"
+
+
+#: src/shortcuts-dialog.ui:33
+msgctxt "shortcut window"
+msgid "Show Shortcuts"
+msgstr "Mostra le scorciatoie"
+
+
+#: src/shortcuts-dialog.ui:39
+msgctxt "shortcut window"
 msgid "Quit"
 msgstr "Esci"
+
+
+#: src/task_gutter.rs:69
+msgid "Drag to Move"
+msgstr "Trascina per spostare"
 
 
 #: src/window.rs:338

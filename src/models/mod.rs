@@ -1,4 +1,5 @@
 pub mod history_log;
+pub mod line_order;
 pub mod pinned_list;
 pub mod sentence;
 pub mod task_list;

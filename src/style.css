@@ -15,6 +15,12 @@
   font-size: 135%;
 }
 
+/* The gutter holds only the drag handle, so it is part of the page rather than
+   a strip of its own. */
+.task-list > border {
+  background: none;
+}
+
 /* The primary action of each screen: a little more type and room than a default
    pill, so it reads as the thing to press. */
 .action {

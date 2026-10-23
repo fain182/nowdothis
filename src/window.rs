@@ -32,6 +32,7 @@ use crate::models::task_list::TaskList;
 use crate::services::history::History;
 use crate::services::storage::Storage;
 use crate::services::telegram_link::TelegramLink;
+use crate::task_gutter::TaskGutter;
 
 mod imp {
     use super::*;
@@ -151,6 +152,8 @@ mod imp {
             self.telegram
                 .set(telegram)
                 .expect("telegram is only set once, during construction");
+
+            TaskGutter::attach(&self.task_view);
 
             self.task_view.buffer().connect_changed(clone!(
                 #[weak]
