@@ -36,6 +36,7 @@ The whole day can be run without reaching for the mouse.
 | <kbd>Ctrl</kbd>+<kbd>Enter</kbd> | Start the list, or mark the task done |
 | <kbd>Enter</kbd> | Mark the task done — the button takes focus on its own |
 | <kbd>Ctrl</kbd>+<kbd>N</kbd> | Add a task without leaving the current one |
+| <kbd>Alt</kbd>+<kbd>↑</kbd> / <kbd>↓</kbd> | Move the task under the cursor up or down the list |
 | <kbd>Ctrl</kbd>+<kbd>?</kbd> | Show the shortcuts |
 
 <kbd>Enter</kbd> is left alone while you are writing the list, where it
